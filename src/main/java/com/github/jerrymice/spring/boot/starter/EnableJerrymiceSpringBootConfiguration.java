@@ -10,7 +10,7 @@ import java.lang.annotation.*;
 /**
  * @author tumingjian
  * @date 2018/8/2
- * 说明:
+ * 说明:启用Spring boot配置的注解
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
