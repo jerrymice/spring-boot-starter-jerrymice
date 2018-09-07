@@ -11,7 +11,7 @@
     <groupId>com.github.jerrymice</groupId>
     <artifactId>spring-boot-starter-jerrymice</artifactId>
     <version>0.0.2.beta6-SNAPSHOT</version>
-    <name>comm.github.jerrymice.spring-boot-starter-jerrymice</name>
+    <name>${project.artifactId}</name>
     <description>
         this spring boot starter can configuration spring boot property vaule
         /**
