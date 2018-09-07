@@ -8,7 +8,7 @@
     </parent>
     <groupId>com.github.jerrymice</groupId>
     <artifactId>spring-boot-starter-jerrymice</artifactId>
-    <version>0.0.2.beta6</version>
+    <version>0.0.2.beta7-SNAPSHOT</version>
     <name>${project.artifactId}</name>
     <description>
         this spring boot starter can configuration spring boot property vaule
@@ -67,7 +67,7 @@
         <url>http://github.com/jerrymice/spring-boot-starter-jerrymice</url>
         <connection>scm:git:ssh://github.com/jerrymice/spring-boot-starter-jerrymice</connection>
         <developerConnection>scm:git:ssh://git@github.com/jerrymice/spring-boot-starter-jerrymice.git</developerConnection>
-        <tag>spring-boot-starter-jerrymice-0.0.2.beta6</tag>
+        <tag>HEAD</tag>
     </scm>
     <distributionManagement>
         <snapshotRepository>
