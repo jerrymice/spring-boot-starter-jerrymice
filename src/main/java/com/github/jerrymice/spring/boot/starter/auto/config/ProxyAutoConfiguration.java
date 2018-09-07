@@ -7,8 +7,7 @@ import com.github.jerrymice.spring.boot.starter.auto.properties.ProxyProperties;
 import javax.annotation.PostConstruct;
 
 /**
- * @Author yanglei
- * @date 2018/8/6 14:49
+ * @author yanglei
  * 将代理信息注入到System.properties中
  */
 public class ProxyAutoConfiguration {

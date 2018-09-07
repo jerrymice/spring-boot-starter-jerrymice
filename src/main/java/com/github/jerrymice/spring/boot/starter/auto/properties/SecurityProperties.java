@@ -6,7 +6,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
  * @author tumingjian
- * @date 2018/8/24
  * 说明:
  */
 @Data

@@ -14,7 +14,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author tumingjian
- * @date 2018/8/2
  * 说明:
  */
 
@@ -22,7 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class HttpSessionAutoConfiguration {
     /**
      * 默认启用SpringSessionMapRepository
-     * @return
+     * @return SessionRepository
      */
     @Bean
     @ConditionalOnWebApplication
@@ -34,7 +33,7 @@ public class HttpSessionAutoConfiguration {
 
     /**
      * 如果未启用SpringSession,那么启用SpringSession
-     * @return
+     * @return SpringHttpSessionConfiguration
      */
     @Bean
     @ConditionalOnWebApplication
@@ -45,7 +44,7 @@ public class HttpSessionAutoConfiguration {
 
     /**
      * 启用扩展的SessionStrategy
-     * @return
+     * @return HttpSessionStrategy
      */
     @Bean
     @ConditionalOnWebApplication

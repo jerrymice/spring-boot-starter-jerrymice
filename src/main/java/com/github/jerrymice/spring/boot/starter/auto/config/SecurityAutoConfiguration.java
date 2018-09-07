@@ -18,7 +18,6 @@ import java.util.Set;
 
 /**
  * @author tumingjian
- * @date 2018/8/24
  * 说明:
  */
 @ConditionalOnProperty(name = EnableJerrymiceSpringBootConfiguration.WEB_SECURITY, havingValue = "true")

@@ -13,7 +13,6 @@ import java.util.regex.Pattern;
 
 /**
  * @author tumingjian
- * @date 2018/1/5
  * 说明:支持在header中读取token,支持在请求参数中读取token
  */
 public class SupperHeaderHttpSessionStrategy implements HttpSessionStrategy {

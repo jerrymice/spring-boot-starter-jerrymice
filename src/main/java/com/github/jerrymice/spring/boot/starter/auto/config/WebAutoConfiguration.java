@@ -25,7 +25,6 @@ import java.util.List;
 
 /**
  * @author tumingjian
- * @date 2018/8/29
  * 说明:
  */
 
@@ -35,7 +34,6 @@ public class WebAutoConfiguration {
 
     /**
      * @author tumingjian
-     * @date 2018/8/6
      * 说明:允许跨域
      */
     @Configuration
@@ -54,10 +52,7 @@ public class WebAutoConfiguration {
 
     /**
      * @author kexl
-     * @Title: spring-boot-starter-zhongjin-web
-     * @Package com.zhongjin.base.config.starter.auto.configurer
-     * @Description: 转换long为string, 防止前台JS丢失精度
-     * @date 2018/8/6 14:31
+     * 转换long为string, 防止前台JS丢失精度
      */
     @Configuration
     @ConditionalOnWebApplication
@@ -81,7 +76,6 @@ public class WebAutoConfiguration {
 
     /**
      * @author tumingjian
-     * @date 2018/8/6
      * 说明: 映射项目下webapp/resource/目录为静态资源/**
      */
     @Configuration
@@ -96,7 +90,6 @@ public class WebAutoConfiguration {
 
     /**
      * @author tumingjian
-     * @date 2018/8/7
      * 说明:将解析当前用户参数的resolver添加到web配置中
      */
     @Configuration

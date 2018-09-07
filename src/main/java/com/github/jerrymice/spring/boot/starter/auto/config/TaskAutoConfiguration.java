@@ -15,7 +15,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
  * @author tumingjian
- * @date 2018/8/24
  * 说明:
  */
 @Slf4j

@@ -11,10 +11,7 @@ import java.util.HashMap;
 
 /**
  * @author kexl
- * @Title: spring-boot-starter-zhongjin-web
- * @Package com.zhongjin.base.config.starter.auto.config
- * @Description: 配置mybatis configuration参数
- * @date 2018/8/6 14:49
+ * spring boot
  *
  * 在新版mybatis boot starter中,这个功能已经鸡肋
  */

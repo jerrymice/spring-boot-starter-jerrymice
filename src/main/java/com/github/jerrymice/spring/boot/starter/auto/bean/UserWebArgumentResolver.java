@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author tumingjian
- * @date 2018/1/5
  * SpringMVC参数解析拦截器
  * 返回当前用户信息
  */

@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 
 /**
+ * @author tumingjian
  * Spring JSON登录拦截器.
  */
 public class UserLoginInterceptor implements HandlerInterceptor{
@@ -20,7 +21,7 @@ public class UserLoginInterceptor implements HandlerInterceptor{
     /**
      *
      * @param userSessionKey  用户Key
-     * @param converter
+     * @param converter spring web mvc JSON HttpMessageConverter
      */
     public UserLoginInterceptor(String userSessionKey, HttpMessageConverter<Object> converter) {
         this.userSessionKey = userSessionKey;

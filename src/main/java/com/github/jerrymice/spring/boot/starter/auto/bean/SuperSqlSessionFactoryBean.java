@@ -10,10 +10,7 @@ import java.util.Map;
 
 /**
  * @author kexl
- * @Title: spring-boot-starter-zhongjin-web
- * @Package com.zhongjin.base.config.starter.auto.bean
- * @Description: 支持非XML方式配置mybatis SqlSessionFactory的几个基本属性.
- * @date 2018/8/6 14:57
+ * 扩展原本mybatis spring SqlSessionFactoryBean部分不支持的一些属性
  */
 @Deprecated
 public class SuperSqlSessionFactoryBean extends SqlSessionFactoryBean {
