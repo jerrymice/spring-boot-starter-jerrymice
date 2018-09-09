@@ -11,39 +11,7 @@
     <version>0.0.2.beta7-SNAPSHOT</version>
     <name>${project.artifactId}</name>
     <description>
-        this spring boot starter can configuration spring boot property vaule
-        /**
-        * 是否启用扩展SessionStrategy,默认true
-        */
-        "jerrymice.spring.boot.config.web.session-strategy";
-        /**
-        * 是否启用跨域,默认true
-        */
-        "jerrymice.spring.boot.config.web.cors-mappings";
-        /**
-        * 是否启用默认的静态资源路径,默认true
-        */
-        "jerrymice.spring.boot.config.web.resource-handler";
-        /**
-        * 是否启用默认的SqlSessionFactory,默认true
-        */
-        "jerrymice.spring.boot.config.sql.session-factory";
-        /**
-        * 是否启用默认的MessageConverters,默认true
-        */
-        "jerrymice.spring.boot.config.web.message-converters";
-        /**
-        * 是否自动注入UserWebArgumentResolver,可以直接在Controller中获取当前用户
-        */
-        "jerrymice.spring.boot.config.web.user-argument-resolver";
-        /**
-        * 是否启用security权限控制
-        */
-        "jerrymice.spring.boot.config.web.security.enabled";
-        /**
-        * 是否启用定时任务接口
-        */
-        "jerrymice.spring.boot.config.web.task.enabled";
+        this spring boot starter can auto configuration spring web mvc property value;
     </description>
     <url>https://github.com/jerrymice/spring-boot-starter-jerrymice</url>
     <licenses>
