@@ -21,14 +21,15 @@ public class UserWebArgumentResolver implements WebArgumentResolver {
      * 是否缓存用户对象的class类型,如果存在多种不同类型的用户登录同一系统,那么建议设置为false
      */
     private boolean enableCacheUserClass;
+    /**
+     * 参数名称
+     */
+    private String methodParamName;
 
-    public UserWebArgumentResolver(String userSessionKey) {
-        this(userSessionKey, false);
-    }
-
-    public UserWebArgumentResolver(String userSessionKey, boolean enableCacheUserClass) {
+    public UserWebArgumentResolver(String userSessionKey, boolean enableCacheUserClass, String methodParamName) {
         this.userSessionKey = userSessionKey;
         this.enableCacheUserClass = enableCacheUserClass;
+        this.methodParamName = methodParamName;
     }
 
     /**
@@ -38,6 +39,9 @@ public class UserWebArgumentResolver implements WebArgumentResolver {
 
     @Override
     public Object resolveArgument(MethodParameter methodParameter, NativeWebRequest webRequest) throws Exception {
+        if (methodParamName != null && !methodParamName.equals(methodParameter.getParameterName())) {
+            return UNRESOLVED;
+        }
         if (cacheCurrentUserClass != null || !enableCacheUserClass) {
             if (methodParameter.getParameterType() != null && cacheCurrentUserClass.isAssignableFrom(methodParameter.getParameterType())) {
                 return getCurrentUser(webRequest);
@@ -58,6 +62,7 @@ public class UserWebArgumentResolver implements WebArgumentResolver {
 
     /**
      * 获取当前用户.
+     *
      * @param webRequest
      * @return
      */

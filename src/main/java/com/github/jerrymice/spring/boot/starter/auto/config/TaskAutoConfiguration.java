@@ -1,7 +1,7 @@
 package com.github.jerrymice.spring.boot.starter.auto.config;
 
-import com.github.jerrymice.spring.boot.starter.EnableJerrymiceSpringBootConfiguration;
-import com.github.jerrymice.spring.boot.starter.auto.properties.WebTaskProperties;
+import com.github.jerrymice.spring.boot.starter.EnableJerryMiceSpringMvcConfiguration;
+import com.github.jerrymice.spring.boot.starter.auto.properties.JerryMiceWebMvcTaskProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.open.code.base.task.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * 说明:
  */
 @Slf4j
-@ConditionalOnProperty(name = EnableJerrymiceSpringBootConfiguration.WEB_TASK, havingValue = "true")
+@ConditionalOnProperty(name = EnableJerryMiceSpringMvcConfiguration.WEB_TASK, havingValue = "true")
 public class TaskAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(TaskProvider.class)
@@ -36,7 +36,7 @@ public class TaskAutoConfiguration {
     @ConditionalOnMissingBean(TaskAuthPassword.class)
     public class DefaultTaskAuthPassword implements TaskAuthPassword {
         @Autowired
-        private WebTaskProperties taskProperties;
+        private JerryMiceWebMvcTaskProperties taskProperties;
 
         @Override
         public boolean verify(String username, String password) {
@@ -51,7 +51,7 @@ public class TaskAutoConfiguration {
     @ConditionalOnMissingBean(TaskAuthToken.class)
     public class DefaultTaskAuthToken implements TaskAuthToken {
         @Autowired
-        private WebTaskProperties taskProperties;
+        private JerryMiceWebMvcTaskProperties taskProperties;
 
         @Override
         public boolean verify(String token) {
@@ -71,14 +71,14 @@ public class TaskAutoConfiguration {
     @Configuration
     public class TaskWebMvcConfigurer implements WebMvcConfigurer {
         @Autowired
-        private WebTaskProperties taskProperties;
+        private JerryMiceWebMvcTaskProperties taskProperties;
         @Autowired
         private TaskProvider taskProvider;
         @Autowired
         private HttpMessageConverter<Object> converter;
         @Override
         public void addInterceptors(InterceptorRegistry registry) {
-            registry.addInterceptor(new TaskInterceptor(taskProvider,converter)).order(taskProperties.getInterceptorOrder()).addPathPatterns(taskProperties.getRequestMappingPath());
+            registry.addInterceptor(new TaskInterceptor(taskProvider,converter)).order(taskProperties.getOrder()).addPathPatterns(taskProperties.getPath());
         }
     }
 }

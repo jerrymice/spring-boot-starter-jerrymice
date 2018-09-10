@@ -10,8 +10,8 @@ import org.springframework.context.annotation.Configuration;
  */
 @Data
 @Configuration
-@ConfigurationProperties(prefix = "jerrymice.spring.boot.config.web.task")
-public class WebTaskProperties {
+@ConfigurationProperties(prefix = "jerrymice.spring.mvc.task")
+public class JerryMiceWebMvcTaskProperties {
     /**
      * 是否启用远程定时任务调度功能.
      */
@@ -19,11 +19,11 @@ public class WebTaskProperties {
     /**
      * task任务统一执行的URL映射地址
      */
-    private String requestMappingPath = "/task/execute";
+    private String path = "/task/execute";
     /**
      * 拦截器顺序,一般使用默认值
      */
-    private int interceptorOrder = 0;
+    private int order = 0;
     /**
      * 是否启用用户身份验证
      */

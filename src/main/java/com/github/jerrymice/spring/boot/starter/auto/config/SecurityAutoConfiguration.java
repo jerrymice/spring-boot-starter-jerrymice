@@ -4,8 +4,8 @@ import com.github.jerrymice.common.permission.GlobalPermissionFailure;
 import com.github.jerrymice.common.permission.PermissionAspect;
 import com.github.jerrymice.common.permission.PermissionResource;
 import com.github.jerrymice.common.permission.PermissionUserHandler;
-import com.github.jerrymice.spring.boot.starter.auto.properties.SecurityProperties;
-import com.github.jerrymice.spring.boot.starter.EnableJerrymiceSpringBootConfiguration;
+import com.github.jerrymice.spring.boot.starter.auto.properties.JerryMiceSecurityProperties;
+import com.github.jerrymice.spring.boot.starter.EnableJerryMiceSpringMvcConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -20,7 +20,7 @@ import java.util.Set;
  * @author tumingjian
  * 说明:
  */
-@ConditionalOnProperty(name = EnableJerrymiceSpringBootConfiguration.WEB_SECURITY, havingValue = "true")
+@ConditionalOnProperty(name = EnableJerryMiceSpringMvcConfiguration.WEB_SECURITY, havingValue = "true")
 public class SecurityAutoConfiguration {
 
 
@@ -46,7 +46,7 @@ public class SecurityAutoConfiguration {
         @Autowired
         private HttpSession httpSession;
         @Autowired
-        private SecurityProperties securityProperties;
+        private JerryMiceSecurityProperties securityProperties;
 
         @Override
         public Set<String> currentUserResources(Object user) {
@@ -59,7 +59,7 @@ public class SecurityAutoConfiguration {
         @Autowired
         private HttpSession httpSession;
         @Autowired
-        private SecurityProperties securityProperties;
+        private JerryMiceSecurityProperties securityProperties;
         @Override
         public Object getCurrentUser() {
             return httpSession.getAttribute(securityProperties.getUserSessionKey());

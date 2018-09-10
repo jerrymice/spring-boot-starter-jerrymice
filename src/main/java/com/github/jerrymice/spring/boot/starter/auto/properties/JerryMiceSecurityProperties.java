@@ -9,8 +9,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * 说明:
  */
 @Data
-@ConfigurationProperties(prefix = "jerrymice.spring.boot.config.web.security")
-public class SecurityProperties {
+@ConfigurationProperties(prefix = "jerrymice.spring.mvc.security")
+public class JerryMiceSecurityProperties {
     boolean enabled = false;
     String userSessionKey = "currentUser";
     String resourceSessionKey = "currentResource";
