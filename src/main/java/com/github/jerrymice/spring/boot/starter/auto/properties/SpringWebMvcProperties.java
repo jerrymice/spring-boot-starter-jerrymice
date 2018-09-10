@@ -25,7 +25,7 @@ public class SpringWebMvcProperties {
     /**
      * 启用增强的OrderRequestMappingHandlerMapping
      */
-    boolean orderMappingHandler = true;
+    boolean orderMappingHandler = false;
 
     /**
      * 设置静态资源映射,每一个数组的相同下标对应一组资源
