@@ -12,6 +12,8 @@ import java.util.regex.Pattern;
 /**
  * @author tumingjian
  * 说明:更强的HttpSessionStrategy策略.
+ * @see com.github.jerrymice.spring.boot.starter.EnableJerryMiceSpringMvcConfiguration
+ * @see com.github.jerrymice.spring.boot.starter.auto.config.WebAutoConfiguration.SuperHttpSessionAutoConfiguration
  */
 public class SuperHeaderHttpSessionStrategy implements HttpSessionStrategy {
     /**

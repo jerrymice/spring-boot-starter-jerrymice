@@ -11,6 +11,8 @@ import javax.servlet.http.HttpSession;
  * @author tumingjian
  *         SpringMVC参数解析拦截器
  *         返回当前用户信息
+ * @see com.github.jerrymice.spring.boot.starter.EnableJerryMiceSpringMvcConfiguration
+ * @see com.github.jerrymice.spring.boot.starter.auto.config.WebAutoConfiguration.UserWebArgumentResolverConfigurer
  */
 public class UserWebArgumentResolver implements WebArgumentResolver {
     /**

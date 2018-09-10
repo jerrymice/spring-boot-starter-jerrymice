@@ -50,7 +50,7 @@ public class WebAutoConfiguration {
     @Configuration
     @ConditionalOnWebApplication
     @ConditionalOnProperty(name = EnableJerryMiceSpringMvcConfiguration.WEB_USER_ARGUMENT_RESOLVER_ENABLE, havingValue = "true", matchIfMissing = true)
-    public class WebArgumentResolverConfigurer implements WebMvcConfigurer {
+    public class UserWebArgumentResolverConfigurer implements WebMvcConfigurer {
         @Autowired
         private SpringWebMvcProperties.UserArgumentResolver config;
 

@@ -11,7 +11,11 @@ import java.lang.reflect.Method;
 /**
  * @author tumingjian
  * 说明:根据order的优先级来注册或替换已有的RequestMappingInfo,order值越小优先级越高
+ * 你可以在Controller的Method方法上添加Order注解,当@RequestMapping中的path重复时,
+ * spring mvc 会将RequestMapping中的Path路径映射到Order优先级最高的Method方法上.
  * @see Order
+ * @see com.github.jerrymice.spring.boot.starter.EnableJerryMiceSpringMvcConfiguration
+ * @see com.github.jerrymice.spring.boot.starter.auto.config.WebAutoConfiguration.OrderRequestMappingHandlerMappingWebMvcRegistrations
  */
 public class OrderRequestMappingHandlerMapping extends RequestMappingHandlerMapping {
 
