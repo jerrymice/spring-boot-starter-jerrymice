@@ -56,4 +56,6 @@ public @interface EnableJerryMiceSpringMvcConfiguration {
      * 是否启用定时任务接口
      */
     String WEB_TASK="jerrymice.spring.mvc.task.enabled";
+
+    String WEB_ORDER_MAPPING_ENABLED="jerrymice.spring.mvc.order-mapping-handler";
 }

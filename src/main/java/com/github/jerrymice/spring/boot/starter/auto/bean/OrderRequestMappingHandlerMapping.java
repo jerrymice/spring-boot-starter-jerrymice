@@ -1,10 +1,8 @@
 package com.github.jerrymice.spring.boot.starter.auto.bean;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.web.method.HandlerMethod;
-import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
@@ -28,15 +26,15 @@ public class OrderRequestMappingHandlerMapping extends RequestMappingHandlerMapp
         HandlerMethod handlerMethod = super.getHandlerMethods().get(mapping);
 
         if (handlerMethod != null) {
-            Order newOrder = method.getAnnotation(Order.class);
-            int newOrderIndex = newOrder != null ? newOrder.value() : Ordered.HIGHEST_PRECEDENCE;
-            Order order = handlerMethod.getMethodAnnotation(Order.class);
-            int orderIndex = order != null ? order.value() : Ordered.HIGHEST_PRECEDENCE;
-            if (newOrderIndex < orderIndex) {
+            Order currentOrder = method.getAnnotation(Order.class);
+            int currentOrderValue = currentOrder != null ? currentOrder.value() : Ordered.HIGHEST_PRECEDENCE;
+            Order alreadyOrder = handlerMethod.getMethodAnnotation(Order.class);
+            int alreadyOrderValue = alreadyOrder != null ? alreadyOrder.value() : Ordered.HIGHEST_PRECEDENCE;
+            if (currentOrderValue < alreadyOrderValue) {
                 super.unregisterMapping(mapping);
                 super.registerMapping(mapping, handler, method);
                 logger.info("map "+mapping+"replace method,old method:"+handlerMethod+",newMethod:"+method);
-            } else if (newOrderIndex > orderIndex) {
+            } else if (currentOrderValue > alreadyOrderValue) {
                 logger.info("map "+mapping+"skip method,already method:"+handlerMethod+"skip method:"+method);
                 return;
             } else {
