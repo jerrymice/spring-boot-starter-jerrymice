@@ -21,7 +21,8 @@ import java.lang.annotation.*;
 
 @Import({SecurityAutoConfiguration.class,
         TaskAutoConfiguration.class,
-        WebAutoConfiguration.class})
+        WebAutoConfiguration.class,
+        WebGlobalExceptionConfiguration.class})
 public @interface EnableJerryMiceSpringMvcConfiguration {
 
     /**
@@ -58,4 +59,8 @@ public @interface EnableJerryMiceSpringMvcConfiguration {
     String WEB_TASK="jerrymice.spring.mvc.task.enabled";
 
     String WEB_ORDER_MAPPING_ENABLED="jerrymice.spring.mvc.order-mapping-handler";
+    /**
+     * 全局异常处理,默认true
+     */
+    String WEB_GLOBAL_EXCEPTION_ENABLED="jerrymice.spring.mvc.globle-exception.enabled";
 }
