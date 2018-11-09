@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.github.jerrymice.common</groupId>
         <artifactId>common-pom</artifactId>
-        <version>0.0.3</version>
+        <version>0.0.4</version>
     </parent>
     <groupId>com.github.jerrymice</groupId>
     <artifactId>spring-boot-starter-jerrymice</artifactId>
@@ -37,16 +37,6 @@
         <developerConnection>scm:git:ssh://git@github.com/jerrymice/spring-boot-starter-jerrymice.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
-    <distributionManagement>
-        <snapshotRepository>
-            <id>sonatype-release</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-        </snapshotRepository>
-        <repository>
-            <id>sonatype-release</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-        </repository>
-    </distributionManagement>
     <dependencies>
         <!--jerrymice-->
         <dependency>
