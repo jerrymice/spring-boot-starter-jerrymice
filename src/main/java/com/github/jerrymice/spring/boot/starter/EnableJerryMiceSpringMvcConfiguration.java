@@ -21,6 +21,7 @@ import java.lang.annotation.*;
 
 @Import({SecurityAutoConfiguration.class,
         TaskAutoConfiguration.class,
+        WebMvcAutoRegistrations.class,
         WebAutoConfiguration.class,
         WebGlobalExceptionConfiguration.class})
 public @interface EnableJerryMiceSpringMvcConfiguration {

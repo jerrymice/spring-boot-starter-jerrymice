@@ -3,6 +3,8 @@ package com.github.jerrymice.spring.boot.starter.auto.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import com.github.jerrymice.common.entity.code.ErrorCode;
+import com.github.jerrymice.common.entity.entity.ResultInfo;
 import com.github.jerrymice.spring.boot.starter.auto.bean.OrderRequestMappingHandlerMapping;
 import com.github.jerrymice.spring.boot.starter.auto.bean.SuperHeaderHttpSessionStrategy;
 import com.github.jerrymice.spring.boot.starter.auto.bean.UserWebArgumentResolver;
@@ -32,6 +34,7 @@ import org.springframework.web.servlet.config.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 import org.springframework.web.servlet.mvc.method.annotation.ServletWebArgumentResolverAdapter;
 
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigInteger;
 import java.nio.charset.Charset;
 import java.util.List;
@@ -39,13 +42,21 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author tumingjian
- *         说明:
+ * 说明:
  */
 
 public class WebAutoConfiguration {
+
+    @Configuration
+    @ConditionalOnProperty(name = EnableJerryMiceSpringMvcConfiguration.WEB_LOGIN_INTERCEPTOR_ENABLE, havingValue = "true", matchIfMissing = true)
+    @ConditionalOnMissingBean(InterceptUserHandler.class)
+    public class DefaultInterceptUserHandler implements InterceptUserHandler {
+
+    }
+
     /**
      * @author tumingjian
-     *         说明:将解析当前用户参数的resolver添加到web配置中
+     * 说明:将解析当前用户参数的resolver添加到web配置中
      */
     @Configuration
     @ConditionalOnWebApplication
@@ -59,6 +70,7 @@ public class WebAutoConfiguration {
             resolvers.add(new ServletWebArgumentResolverAdapter(new UserWebArgumentResolver(config.getUserSessionKey(), config.isEnabledCacheUserClass(), config.getMethodParamName())));
         }
     }
+
 
     /**
      * 自动初始化登录拦截器
@@ -76,23 +88,22 @@ public class WebAutoConfiguration {
 
         @Override
         public void addInterceptors(InterceptorRegistry registry) {
-            registry.addInterceptor(new UserLoginInterceptor(loginConfig.getUserSessionKey(), converter, interceptUserHandler))
-                    .order(loginConfig.getOrder())
-                    .addPathPatterns(loginConfig.getPathPatterns())
-                    .excludePathPatterns(loginConfig.getExcludePathPatterns());
-        }
-
-        @Configuration
-        @ConditionalOnProperty(name = EnableJerryMiceSpringMvcConfiguration.WEB_LOGIN_INTERCEPTOR_ENABLE, havingValue = "true", matchIfMissing = true)
-        @ConditionalOnMissingBean(InterceptUserHandler.class)
-        public class DefaultInterceptUserHandler implements InterceptUserHandler {
-
+            InterceptorRegistration registration = registry.addInterceptor(new UserLoginInterceptor(loginConfig.getUserSessionKey(), converter, interceptUserHandler))
+                    .order(loginConfig.getOrder());
+            String[] pathPatterns = loginConfig.getPathPatterns();
+            String[] excludePathPatterns = loginConfig.getExcludePathPatterns();
+            if(pathPatterns!=null){
+                registration.addPathPatterns(pathPatterns);
+            }
+            if(excludePathPatterns!=null){
+                registration.excludePathPatterns(excludePathPatterns);
+            }
         }
     }
 
     /**
      * @author tumingjian
-     *         说明:允许跨域
+     * 说明:允许跨域
      */
     @Configuration
     @ConditionalOnWebApplication
@@ -113,7 +124,7 @@ public class WebAutoConfiguration {
 
     /**
      * @author kexl
-     *         转换long为string, 防止前台JS丢失精度
+     * 转换long为string, 防止前台JS丢失精度
      */
     @Configuration
     @ConditionalOnWebApplication
@@ -137,7 +148,7 @@ public class WebAutoConfiguration {
 
     /**
      * @author tumingjian
-     *         说明: 映射项目下webapp/resource/目录为静态资源/**
+     * 说明: 映射项目下webapp/resource/目录为静态资源/**
      */
     @Configuration
     @ConditionalOnWebApplication
@@ -161,7 +172,7 @@ public class WebAutoConfiguration {
                     }
 
                 }
-            }else{
+            } else {
                 throw new ResourceAccessException("application config property value jerrymice.spring.mvc.resource-handler length need equals jerrymice.spring.mvc.resource-location length");
             }
         }
@@ -169,7 +180,7 @@ public class WebAutoConfiguration {
 
     /**
      * @author tumingjian
-     *         说明:先启用spring session.再根据配置启用SuperHeaderHttpSessionStrategy
+     * 说明:先启用spring session.再根据配置启用SuperHeaderHttpSessionStrategy
      */
     @Configuration
     @ConditionalOnWebApplication
@@ -215,21 +226,6 @@ public class WebAutoConfiguration {
             return new SuperHeaderHttpSessionStrategy(config.getSessionAliasParamName(), config.isSupportHttpHeader(), config.isSupportQueryString(), config.isSupportCookie());
         }
 
-    }
-
-    /**
-     * @author tumingjian
-     * 说明:启用OrderRequestMappingHandlerMapping
-     */
-    @Configuration
-    @ConditionalOnWebApplication
-    @ConditionalOnMissingBean(OrderRequestMappingHandlerMapping.class)
-    @ConditionalOnProperty(name = EnableJerryMiceSpringMvcConfiguration.WEB_ORDER_MAPPING_ENABLED, havingValue = "true", matchIfMissing = true)
-    public class OrderRequestMappingHandlerMappingWebMvcRegistrations implements WebMvcRegistrations {
-        @Override
-        public RequestMappingHandlerMapping getRequestMappingHandlerMapping() {
-            return new OrderRequestMappingHandlerMapping();
-        }
     }
 
 
