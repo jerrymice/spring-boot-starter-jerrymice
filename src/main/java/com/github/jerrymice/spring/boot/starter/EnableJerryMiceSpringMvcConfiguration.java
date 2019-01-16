@@ -66,5 +66,5 @@ public @interface EnableJerryMiceSpringMvcConfiguration {
     /**
      * 全局异常处理,默认true
      */
-    String WEB_GLOBAL_EXCEPTION_ENABLED="jerrymice.spring.mvc.globle-exception.enabled";
+    String WEB_GLOBAL_EXCEPTION_ENABLED="jerrymice.spring.mvc.global-exception.enabled";
 }
