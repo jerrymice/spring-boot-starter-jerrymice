@@ -1,4 +1,4 @@
-package com.github.jerrymice.spring.boot.starter.auto.bean;
+package com.github.jerrymice.spring.boot.starter.bean;
 
 import com.github.jerrymice.common.entity.code.ErrorCode;
 import com.github.jerrymice.common.entity.entity.Result;

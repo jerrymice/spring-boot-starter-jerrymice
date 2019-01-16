@@ -1,7 +1,10 @@
 package com.github.jerrymice.spring.boot.starter;
 
-import com.github.jerrymice.spring.boot.starter.auto.config.*;
-import com.github.jerrymice.spring.boot.starter.auto.properties.*;
+
+import com.github.jerrymice.spring.boot.starter.config.*;
+import com.github.jerrymice.spring.boot.starter.properties.JerryMiceSecurityProperties;
+import com.github.jerrymice.spring.boot.starter.properties.JerryMiceWebMvcTaskProperties;
+import com.github.jerrymice.spring.boot.starter.properties.SpringWebMvcProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Import;
 

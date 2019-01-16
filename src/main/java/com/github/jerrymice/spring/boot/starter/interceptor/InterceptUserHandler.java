@@ -1,4 +1,4 @@
-package com.github.jerrymice.spring.boot.starter.auto.interceptor;
+package com.github.jerrymice.spring.boot.starter.interceptor;
 
 import com.github.jerrymice.common.entity.code.ErrorCode;
 import com.github.jerrymice.common.entity.entity.ResultInfo;

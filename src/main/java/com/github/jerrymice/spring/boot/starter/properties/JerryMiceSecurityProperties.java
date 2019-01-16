@@ -1,4 +1,4 @@
-package com.github.jerrymice.spring.boot.starter.auto.properties;
+package com.github.jerrymice.spring.boot.starter.properties;
 
 import lombok.Data;
 import lombok.experimental.Accessors;

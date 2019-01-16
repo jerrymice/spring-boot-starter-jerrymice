@@ -1,10 +1,10 @@
-package com.github.jerrymice.spring.boot.starter.auto.config;
+package com.github.jerrymice.spring.boot.starter.config;
 
 import com.github.jerrymice.common.permission.GlobalPermissionFailure;
 import com.github.jerrymice.common.permission.PermissionAspect;
 import com.github.jerrymice.common.permission.PermissionResource;
 import com.github.jerrymice.common.permission.PermissionUserHandler;
-import com.github.jerrymice.spring.boot.starter.auto.properties.JerryMiceSecurityProperties;
+import com.github.jerrymice.spring.boot.starter.properties.JerryMiceSecurityProperties;
 import com.github.jerrymice.spring.boot.starter.EnableJerryMiceSpringMvcConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;

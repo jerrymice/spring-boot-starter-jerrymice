@@ -1,5 +1,6 @@
-package com.github.jerrymice.spring.boot.starter.auto.bean;
+package com.github.jerrymice.spring.boot.starter.bean;
 
+import com.github.jerrymice.spring.boot.starter.config.WebMvcAutoRegistrations;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.web.method.HandlerMethod;
@@ -15,7 +16,7 @@ import java.lang.reflect.Method;
  * spring mvc 会将RequestMapping中的Path路径映射到Order优先级最高的Method方法上.
  * @see Order
  * @see com.github.jerrymice.spring.boot.starter.EnableJerryMiceSpringMvcConfiguration
- * @see com.github.jerrymice.spring.boot.starter.auto.config.WebMvcAutoRegistrations
+ * @see WebMvcAutoRegistrations
  */
 public class OrderRequestMappingHandlerMapping extends RequestMappingHandlerMapping {
 

@@ -1,7 +1,7 @@
-package com.github.jerrymice.spring.boot.starter.auto.config;
+package com.github.jerrymice.spring.boot.starter.config;
 
 import com.github.jerrymice.spring.boot.starter.EnableJerryMiceSpringMvcConfiguration;
-import com.github.jerrymice.spring.boot.starter.auto.bean.GlobalExceptionHandler;
+import com.github.jerrymice.spring.boot.starter.bean.GlobalExceptionHandler;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;

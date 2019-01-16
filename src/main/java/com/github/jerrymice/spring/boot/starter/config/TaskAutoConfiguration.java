@@ -1,7 +1,7 @@
-package com.github.jerrymice.spring.boot.starter.auto.config;
+package com.github.jerrymice.spring.boot.starter.config;
 
 import com.github.jerrymice.spring.boot.starter.EnableJerryMiceSpringMvcConfiguration;
-import com.github.jerrymice.spring.boot.starter.auto.properties.JerryMiceWebMvcTaskProperties;
+import com.github.jerrymice.spring.boot.starter.properties.JerryMiceWebMvcTaskProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.open.code.base.task.*;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,6 +1,7 @@
-package com.github.jerrymice.spring.boot.starter.auto.bean;
+package com.github.jerrymice.spring.boot.starter.bean;
 
 
+import com.github.jerrymice.spring.boot.starter.config.WebAutoConfiguration;
 import org.springframework.session.Session;
 import org.springframework.session.web.http.CookieHttpSessionStrategy;
 import org.springframework.session.web.http.HttpSessionStrategy;
@@ -13,7 +14,7 @@ import java.util.regex.Pattern;
  * @author tumingjian
  * 说明:更强的HttpSessionStrategy策略.
  * @see com.github.jerrymice.spring.boot.starter.EnableJerryMiceSpringMvcConfiguration
- * @see com.github.jerrymice.spring.boot.starter.auto.config.WebAutoConfiguration.SuperHttpSessionAutoConfiguration
+ * @see WebAutoConfiguration.SuperHttpSessionAutoConfiguration
  */
 public class SuperHeaderHttpSessionStrategy implements HttpSessionStrategy {
     /**
