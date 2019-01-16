@@ -8,10 +8,7 @@ import org.springframework.context.annotation.Bean;
 
 /**
  * @author kexl
- * @Title: spring-boot-starter-jerrymice
- * @Package com.github.jerrymice.spring.boot.starter.auto.config
- * @Description:统一异常处理
- * @date 2018/11/6 10:55
+ * 统一异常处理
  */
 @ConditionalOnProperty(name=EnableJerryMiceSpringMvcConfiguration.WEB_GLOBAL_EXCEPTION_ENABLED,havingValue = "true")
 public class WebGlobalExceptionConfiguration {

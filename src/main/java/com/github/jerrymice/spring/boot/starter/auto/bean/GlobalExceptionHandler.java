@@ -22,10 +22,7 @@ import java.util.Map;
 
 /**
  * @author kexl
- * @Title: spring-boot-starter-jerrymice
- * @Package com.github.jerrymice.spring.boot.starter.auto.bean
- * @Description:异常处理
- * @date 2018/11/6 10:58
+ * 异常处理
  */
 
 @RestControllerAdvice
@@ -35,8 +32,8 @@ public class GlobalExceptionHandler {
 
 	/**
 	 * 参数校验
-	 * @param e
-	 * @return
+	 * @param e spring 异常信息
+	 * @return 异常响应结果
 	 */
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(value = BindException.class)
@@ -61,8 +58,8 @@ public class GlobalExceptionHandler {
 	}
 	/**
 	 * 405 - Method Not Allowed
-	 * @param e
-	 * @return
+	 * @param e spring 异常信息
+	 * @return 异常响应结果
 	 */
 	@ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
 	@ExceptionHandler(HttpRequestMethodNotSupportedException.class)
@@ -73,8 +70,8 @@ public class GlobalExceptionHandler {
 
 	/**
 	 * 415 - Unsupported Media Type
-	 * @param e
-	 * @return
+	 * @param e spring 异常信息
+	 * @return 异常响应结果
 	 */
 	@ResponseStatus(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
 	@ExceptionHandler(HttpMediaTypeNotSupportedException.class)
@@ -85,8 +82,9 @@ public class GlobalExceptionHandler {
 
 	/**
 	 * 通用异常
-	 * @param e
-	 * @return
+	 * @param request HttpServletRequest
+	 * @param e spring 异常信息
+	 * @return 异常响应结果
 	 */
 	@ExceptionHandler(Exception.class)
 	public Result defultExcepitonHandler(HttpServletRequest request, Exception e) {

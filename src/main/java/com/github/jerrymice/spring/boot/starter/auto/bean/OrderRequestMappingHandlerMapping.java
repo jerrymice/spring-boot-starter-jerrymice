@@ -15,7 +15,7 @@ import java.lang.reflect.Method;
  * spring mvc 会将RequestMapping中的Path路径映射到Order优先级最高的Method方法上.
  * @see Order
  * @see com.github.jerrymice.spring.boot.starter.EnableJerryMiceSpringMvcConfiguration
- * @see com.github.jerrymice.spring.boot.starter.auto.config.WebAutoConfiguration.OrderRequestMappingHandlerMappingWebMvcRegistrations
+ * @see com.github.jerrymice.spring.boot.starter.auto.config.WebMvcAutoRegistrations
  */
 public class OrderRequestMappingHandlerMapping extends RequestMappingHandlerMapping {
 

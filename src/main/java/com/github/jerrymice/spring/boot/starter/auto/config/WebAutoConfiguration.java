@@ -12,6 +12,7 @@ import com.github.jerrymice.spring.boot.starter.auto.interceptor.InterceptUserHa
 import com.github.jerrymice.spring.boot.starter.auto.interceptor.UserLoginInterceptor;
 import com.github.jerrymice.spring.boot.starter.auto.properties.SpringWebMvcProperties;
 import com.github.jerrymice.spring.boot.starter.EnableJerryMiceSpringMvcConfiguration;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -44,7 +45,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author tumingjian
  * 说明:
  */
-
+@Slf4j
 public class WebAutoConfiguration {
 
     @Configuration
@@ -73,7 +74,7 @@ public class WebAutoConfiguration {
 
 
     /**
-     * 自动初始化登录拦截器
+     * 自动初始化登录拦截器GlobalExceptionHandler.
      */
     @Configuration
     @ConditionalOnWebApplication
@@ -94,6 +95,8 @@ public class WebAutoConfiguration {
             String[] excludePathPatterns = loginConfig.getExcludePathPatterns();
             if(pathPatterns!=null){
                 registration.addPathPatterns(pathPatterns);
+            }else{
+                log.warn("您启用了登录拦截器,但却没有设置登录拦截器要拦截的地址");
             }
             if(excludePathPatterns!=null){
                 registration.excludePathPatterns(excludePathPatterns);
