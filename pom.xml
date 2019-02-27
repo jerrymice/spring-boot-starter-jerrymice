@@ -8,7 +8,7 @@
     </parent>
     <groupId>com.github.jerrymice</groupId>
     <artifactId>spring-boot-starter-jerrymice</artifactId>
-    <version>0.0.2.beta8</version>
+    <version>0.0.2.beta9-SNAPSHOT</version>
     <name>${project.artifactId}</name>
     <description>
         this spring boot starter can auto configuration spring web mvc property value;
@@ -35,7 +35,7 @@
         <url>http://github.com/jerrymice/spring-boot-starter-jerrymice</url>
         <connection>scm:git:ssh://github.com/jerrymice/spring-boot-starter-jerrymice</connection>
         <developerConnection>scm:git:ssh://git@github.com/jerrymice/spring-boot-starter-jerrymice.git</developerConnection>
-        <tag>spring-boot-starter-jerrymice-0.0.2.beta8</tag>
+        <tag>HEAD</tag>
     </scm>
     <dependencies>
         <!--jerrymice-->
