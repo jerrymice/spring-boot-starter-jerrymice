@@ -25,6 +25,7 @@ import org.springframework.session.MapSessionRepository;
 import org.springframework.session.SessionRepository;
 import org.springframework.session.config.annotation.web.http.SpringHttpSessionConfiguration;
 import org.springframework.session.web.http.HttpSessionStrategy;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.*;
@@ -221,6 +222,16 @@ public class WebAutoConfiguration {
         @ConditionalOnProperty(name = EnableJerryMiceSpringMvcConfiguration.WEB_SESSION_STRATEGY_ENABLE, havingValue = "true", matchIfMissing = true)
         public HttpSessionStrategy httpSessionStrategy() {
             return new SuperHeaderHttpSessionStrategy(config.getSessionAliasParamName(), config.isSupportHttpHeader(), config.isSupportQueryString(), config.isSupportCookie());
+        }
+        /**
+         * 支持在 ConstraintValidator接口中直接用Autowired流解引用spring中的bean,用于自定义的注解验证器.
+         * @return LocalValidatorFactoryBean
+         */
+        @Bean
+        @ConditionalOnMissingBean(LocalValidatorFactoryBean.class)
+        public LocalValidatorFactoryBean localValidatorFactoryBean() {
+            LocalValidatorFactoryBean localValidatorFactoryBean = new LocalValidatorFactoryBean();
+            return localValidatorFactoryBean;
         }
 
     }
