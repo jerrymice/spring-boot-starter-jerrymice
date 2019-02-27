@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Bean;
  * @author kexl
  * 统一异常处理
  */
-@ConditionalOnProperty(name=EnableJerryMiceSpringMvcConfiguration.WEB_GLOBAL_EXCEPTION_ENABLED,havingValue = "true")
+@ConditionalOnProperty(name=EnableJerryMiceSpringMvcConfiguration.WEB_GLOBAL_EXCEPTION_ENABLED,havingValue = "true",matchIfMissing = true)
 public class WebGlobalExceptionConfiguration {
 
 	@Bean
