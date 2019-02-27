@@ -2,7 +2,6 @@ package com.github.jerrymice.spring.boot.starter;
 
 
 import com.github.jerrymice.spring.boot.starter.config.*;
-import com.github.jerrymice.spring.boot.starter.properties.JerryMiceSecurityProperties;
 import com.github.jerrymice.spring.boot.starter.properties.JerryMiceWebMvcTaskProperties;
 import com.github.jerrymice.spring.boot.starter.properties.SpringWebMvcProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -19,7 +18,6 @@ import java.lang.annotation.*;
 @Documented
 @EnableConfigurationProperties({
         JerryMiceWebMvcTaskProperties.class,
-        JerryMiceSecurityProperties.class,
         SpringWebMvcProperties.class})
 
 @Import({SecurityAutoConfiguration.class,

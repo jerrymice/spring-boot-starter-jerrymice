@@ -1,10 +1,9 @@
 package com.github.jerrymice.spring.boot.starter.properties;
 
 import lombok.Data;
-import lombok.experimental.Accessors;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+
 
 /**
  * @author tumingjian
@@ -66,7 +65,7 @@ public class SpringWebMvcProperties {
         /**
          * 当前user信息在session的KEY值
          */
-        private String userSessionKey = "${jerrymice.spring.mvc.user-session-key}";
+        private String userSessionKey=SpringWebMvcProperties.this.userSessionKey;
         /**
          * 是否缓存用户对象的class类型,如果存在多种不同类型的用户登录同一系统,那么建议设置为false
          */
@@ -146,7 +145,7 @@ public class SpringWebMvcProperties {
         /**
          * 当前user信息在session的KEY值
          */
-        String userSessionKey = "${jerrymice.spring.mvc.user-session-key}";
+        String userSessionKey = SpringWebMvcProperties.this.userSessionKey;
         /**
          * 要拦截的URL Pattern列表
          */
@@ -159,5 +158,19 @@ public class SpringWebMvcProperties {
          * 拦截器顺序
          */
         int order = 1;
+    }
+    /**
+     * @author tumingjian
+     * 说明:
+     */
+    @Data
+    @ConfigurationProperties(prefix = "jerrymice.spring.mvc.security")
+    @Configuration
+    public class JerryMiceSecurityProperties {
+        boolean enabled = false;
+        String userSessionKey = SpringWebMvcProperties.this.userSessionKey;
+        String resourceSessionKey = "currentResource";
+
+
     }
 }
