@@ -1,6 +1,7 @@
-package com.github.jerrymice.spring.boot.starter.interceptor;
+package com.github.jerrymice.spring.boot.mvc.interceptor;
 
-import com.github.jerrymice.common.entity.code.ErrorCode;
+
+import com.github.jerrymice.common.entity.code.GlobalErrorCode;
 import com.github.jerrymice.common.entity.entity.ResultInfo;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,8 +17,6 @@ public interface InterceptUserHandler {
      * @return 返回要JSON序列化的对象.
      */
     default Object returnObject(HttpServletRequest request){
-        ResultInfo resultInfo = new ResultInfo(false);
-        resultInfo.setCode(ErrorCode.USER_NO_LOGIN.getCode()).setMessage(ErrorCode.USER_NO_LOGIN.getMessage());
-        return resultInfo;
+        return  new ResultInfo(GlobalErrorCode.INVALID_SYSTEM_USER);
     }
 }

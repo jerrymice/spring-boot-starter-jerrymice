@@ -1,9 +1,9 @@
-package com.github.jerrymice.spring.boot.starter.config;
+package com.github.jerrymice.spring.boot.mvc.config;
 
-import com.github.jerrymice.spring.boot.starter.EnableJerryMiceSpringMvcConfiguration;
-import com.github.jerrymice.spring.boot.starter.properties.JerryMiceWebMvcTaskProperties;
+import com.github.jerrymice.common.task.*;
+import com.github.jerrymice.spring.boot.EnableJerryMice;
+import com.github.jerrymice.spring.boot.mvc.properties.JerryMiceWebMvcTaskProperties;
 import lombok.extern.slf4j.Slf4j;
-import org.open.code.base.task.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -18,7 +18,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * 说明:
  */
 @Slf4j
-@ConditionalOnProperty(name = EnableJerryMiceSpringMvcConfiguration.WEB_TASK, havingValue = "true")
+@ConditionalOnProperty(name = EnableJerryMice.WEB_TASK, havingValue = "true")
 public class TaskAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(TaskProvider.class)

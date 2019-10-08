@@ -1,9 +1,14 @@
-package com.github.jerrymice.spring.boot.starter;
+package com.github.jerrymice.spring.boot;
 
 
-import com.github.jerrymice.spring.boot.starter.config.*;
-import com.github.jerrymice.spring.boot.starter.properties.JerryMiceWebMvcTaskProperties;
-import com.github.jerrymice.spring.boot.starter.properties.SpringWebMvcProperties;
+import com.github.jerrymice.spring.boot.mvc.bean.GlobalExceptionHandler;
+import com.github.jerrymice.spring.boot.mvc.bean.OrderRequestMappingHandlerMapping;
+import com.github.jerrymice.spring.boot.mvc.bean.SuperHeaderHttpSessionStrategy;
+import com.github.jerrymice.spring.boot.mvc.bean.UserWebArgumentResolver;
+import com.github.jerrymice.spring.boot.mvc.config.*;
+import com.github.jerrymice.spring.boot.mvc.interceptor.UserLoginInterceptor;
+import com.github.jerrymice.spring.boot.mvc.properties.JerryMiceWebMvcTaskProperties;
+import com.github.jerrymice.spring.boot.mvc.properties.SpringWebMvcProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Import;
 
@@ -25,11 +30,11 @@ import java.lang.annotation.*;
         WebMvcAutoRegistrations.class,
         WebAutoConfiguration.class,
         WebGlobalExceptionConfiguration.class})
-public @interface EnableJerryMiceSpringMvcConfiguration {
+public @interface EnableJerryMice {
 
     /**
      * 是否启用扩展SessionStrategy,默认true
-     * @see com.github.jerrymice.spring.boot.starter.bean.SuperHeaderHttpSessionStrategy
+     * @see SuperHeaderHttpSessionStrategy
      */
     String WEB_SESSION_STRATEGY_ENABLE = "jerrymice.spring.mvc.session-strategy.enabled";
     /**
@@ -38,13 +43,13 @@ public @interface EnableJerryMiceSpringMvcConfiguration {
     String WEB_GLOBAL_CORS_ENABLE = "jerrymice.spring.mvc.global-cors.enabled";
     /**
      * 是否自动注入UserWebArgumentResolver,可以直接在Controller中获取当前用户
-     * @see com.github.jerrymice.spring.boot.starter.bean.UserWebArgumentResolver
+     * @see UserWebArgumentResolver
      */
     String WEB_USER_ARGUMENT_RESOLVER_ENABLE = "jerrymice.spring.mvc.user-argument-resolver.enabled";
     /**
      * 是否启用登录拦截器
-     * @see com.github.jerrymice.spring.boot.starter.interceptor.UserLoginInterceptor
-     * @see com.github.jerrymice.spring.boot.starter.config.WebAutoConfiguration.UserLoginInterceptorConfigurer
+     * @see UserLoginInterceptor
+     * @see WebAutoConfiguration.UserLoginInterceptorConfigurer
      */
     String WEB_LOGIN_INTERCEPTOR_ENABLE="jerrymice.spring.mvc.login-interceptor.enabled";
     /**
@@ -67,12 +72,21 @@ public @interface EnableJerryMiceSpringMvcConfiguration {
     String WEB_TASK="jerrymice.spring.mvc.task.enabled";
     /**
      * 一个可以支持@Order注解排序的Controller @RequestMapping方法.
-     * @see com.github.jerrymice.spring.boot.starter.bean.OrderRequestMappingHandlerMapping
+     * @see OrderRequestMappingHandlerMapping
      */
     String WEB_ORDER_MAPPING_ENABLED="jerrymice.spring.mvc.order-mapping-handler";
     /**
      * 全局异常处理,默认true
-     * @see com.github.jerrymice.spring.boot.starter.bean.GlobalExceptionHandler
+     * @see GlobalExceptionHandler
      */
     String WEB_GLOBAL_EXCEPTION_ENABLED="jerrymice.spring.mvc.global-exception.enabled";
+    /**
+     * 全局返回值response处理,所有JSON返回值都处理为Result接口形式的返回值,默认true
+     * 使用这个前,必须先启用 jerrymice.spring.mvc.jack-json-message-converter
+     * 接口的正常返回值将在result的body中.正常返回时代码为0000
+     * @see com.github.jerrymice.common.entity.entity.Result
+     * @see com.github.jerrymice.common.entity.code.GlobalErrorCode
+     *
+     */
+    String WEB_GLOBAL_RESPONSE_ENABLED="jerrymice.spring.mvc.global-response.enabled";
 }

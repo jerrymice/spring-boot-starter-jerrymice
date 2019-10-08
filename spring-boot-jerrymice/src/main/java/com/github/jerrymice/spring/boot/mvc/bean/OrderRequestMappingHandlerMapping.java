@@ -1,6 +1,6 @@
-package com.github.jerrymice.spring.boot.starter.bean;
+package com.github.jerrymice.spring.boot.mvc.bean;
 
-import com.github.jerrymice.spring.boot.starter.config.WebMvcAutoRegistrations;
+import com.github.jerrymice.spring.boot.EnableJerryMice;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.web.method.HandlerMethod;
@@ -15,8 +15,8 @@ import java.lang.reflect.Method;
  * 你可以在Controller的Method方法上添加Order注解,当@RequestMapping中的path重复时,
  * spring mvc 会将RequestMapping中的Path路径映射到Order优先级最高的Method方法上.
  * @see Order
- * @see com.github.jerrymice.spring.boot.starter.EnableJerryMiceSpringMvcConfiguration
- * @see WebMvcAutoRegistrations
+ * @see EnableJerryMice
+ * @see org.springframework.boot.autoconfigure.web.servlet.WebMvcRegistrations
  */
 public class OrderRequestMappingHandlerMapping extends RequestMappingHandlerMapping {
 

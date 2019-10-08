@@ -1,16 +1,18 @@
-package com.github.jerrymice.spring.boot.starter.config;
+package com.github.jerrymice.spring.boot.mvc.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
-import com.github.jerrymice.spring.boot.starter.bean.SuperHeaderHttpSessionStrategy;
-import com.github.jerrymice.spring.boot.starter.bean.UserWebArgumentResolver;
-import com.github.jerrymice.spring.boot.starter.interceptor.InterceptUserHandler;
-import com.github.jerrymice.spring.boot.starter.interceptor.UserLoginInterceptor;
-import com.github.jerrymice.spring.boot.starter.properties.SpringWebMvcProperties;
-import com.github.jerrymice.spring.boot.starter.EnableJerryMiceSpringMvcConfiguration;
+import com.github.jerrymice.spring.boot.EnableJerryMice;
+import com.github.jerrymice.spring.boot.mvc.bean.ResultMappingJackson2HttpMessageConverter;
+import com.github.jerrymice.spring.boot.mvc.bean.SuperHeaderHttpSessionStrategy;
+import com.github.jerrymice.spring.boot.mvc.bean.UserWebArgumentResolver;
+import com.github.jerrymice.spring.boot.mvc.interceptor.InterceptUserHandler;
+import com.github.jerrymice.spring.boot.mvc.interceptor.UserLoginInterceptor;
+import com.github.jerrymice.spring.boot.mvc.properties.SpringWebMvcProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -44,7 +46,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class WebAutoConfiguration {
 
     @Configuration
-    @ConditionalOnProperty(name = EnableJerryMiceSpringMvcConfiguration.WEB_LOGIN_INTERCEPTOR_ENABLE, havingValue = "true", matchIfMissing = true)
+    @ConditionalOnProperty(name = EnableJerryMice.WEB_LOGIN_INTERCEPTOR_ENABLE, havingValue = "true", matchIfMissing = true)
     @ConditionalOnMissingBean(InterceptUserHandler.class)
     public class DefaultInterceptUserHandler implements InterceptUserHandler {
 
@@ -56,7 +58,7 @@ public class WebAutoConfiguration {
      */
     @Configuration
     @ConditionalOnWebApplication
-    @ConditionalOnProperty(name = EnableJerryMiceSpringMvcConfiguration.WEB_USER_ARGUMENT_RESOLVER_ENABLE, havingValue = "true", matchIfMissing = true)
+    @ConditionalOnProperty(name = EnableJerryMice.WEB_USER_ARGUMENT_RESOLVER_ENABLE, havingValue = "true", matchIfMissing = true)
     public class UserWebArgumentResolverConfigurer implements WebMvcConfigurer {
         @Autowired
         private SpringWebMvcProperties.UserArgumentResolver config;
@@ -73,7 +75,7 @@ public class WebAutoConfiguration {
      */
     @Configuration
     @ConditionalOnWebApplication
-    @ConditionalOnProperty(name = EnableJerryMiceSpringMvcConfiguration.WEB_LOGIN_INTERCEPTOR_ENABLE, havingValue = "true", matchIfMissing = true)
+    @ConditionalOnProperty(name = EnableJerryMice.WEB_LOGIN_INTERCEPTOR_ENABLE, havingValue = "true", matchIfMissing = true)
     public class UserLoginInterceptorConfigurer implements WebMvcConfigurer {
         @Autowired
         private SpringWebMvcProperties.LoginInterceptor loginConfig;
@@ -105,7 +107,7 @@ public class WebAutoConfiguration {
      */
     @Configuration
     @ConditionalOnWebApplication
-    @ConditionalOnProperty(name = EnableJerryMiceSpringMvcConfiguration.WEB_GLOBAL_CORS_ENABLE, havingValue = "true", matchIfMissing = true)
+    @ConditionalOnProperty(name = EnableJerryMice.WEB_GLOBAL_CORS_ENABLE, havingValue = "true", matchIfMissing = true)
     public class CorsMappingsWebMvcConfigurer implements WebMvcConfigurer {
         @Autowired
         private SpringWebMvcProperties.GlobalCors config;
@@ -126,12 +128,18 @@ public class WebAutoConfiguration {
      */
     @Configuration
     @ConditionalOnWebApplication
-    @ConditionalOnProperty(name = EnableJerryMiceSpringMvcConfiguration.WEB_MESSAGE_CONVERTERS_ENABLE, havingValue = "true", matchIfMissing = true)
+    @ConditionalOnProperty(name = EnableJerryMice.WEB_MESSAGE_CONVERTERS_ENABLE, havingValue = "true", matchIfMissing = true)
     public class MessageConvertersWebMvcConfigurer implements WebMvcConfigurer {
-
+        @Value("${"+EnableJerryMice.WEB_GLOBAL_RESPONSE_ENABLED+":true}")
+        private boolean webGlobalResponseEnable;
         @Override
         public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
-            MappingJackson2HttpMessageConverter jackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
+            MappingJackson2HttpMessageConverter jackson2HttpMessageConverter;
+            if(webGlobalResponseEnable){
+                jackson2HttpMessageConverter=new MappingJackson2HttpMessageConverter();
+            }else{
+                jackson2HttpMessageConverter=new ResultMappingJackson2HttpMessageConverter();
+            }
             ObjectMapper objectMapper = new ObjectMapper();
             SimpleModule simpleModule = new SimpleModule();
             simpleModule.addSerializer(BigInteger.class, ToStringSerializer.instance);
@@ -150,7 +158,7 @@ public class WebAutoConfiguration {
      */
     @Configuration
     @ConditionalOnWebApplication
-    @ConditionalOnProperty(name = EnableJerryMiceSpringMvcConfiguration.WEB_RESOURCE_HANDLER_ENABLE, havingValue = "true", matchIfMissing = true)
+    @ConditionalOnProperty(name = EnableJerryMice.WEB_RESOURCE_HANDLER_ENABLE, havingValue = "true", matchIfMissing = true)
     public class MappingStaticResourceWebMvcConfigurer implements WebMvcConfigurer {
         @Autowired
         private SpringWebMvcProperties.MappingStaticResource config;
@@ -219,7 +227,7 @@ public class WebAutoConfiguration {
         @Bean
         @ConditionalOnWebApplication
         @ConditionalOnBean(SpringHttpSessionConfiguration.class)
-        @ConditionalOnProperty(name = EnableJerryMiceSpringMvcConfiguration.WEB_SESSION_STRATEGY_ENABLE, havingValue = "true", matchIfMissing = true)
+        @ConditionalOnProperty(name = EnableJerryMice.WEB_SESSION_STRATEGY_ENABLE, havingValue = "true", matchIfMissing = true)
         public HttpSessionStrategy httpSessionStrategy() {
             return new SuperHeaderHttpSessionStrategy(config.getSessionAliasParamName(), config.isSupportHttpHeader(), config.isSupportQueryString(), config.isSupportCookie());
         }

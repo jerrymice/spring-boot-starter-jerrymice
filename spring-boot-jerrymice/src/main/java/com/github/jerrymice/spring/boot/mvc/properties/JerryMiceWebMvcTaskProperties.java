@@ -1,4 +1,4 @@
-package com.github.jerrymice.spring.boot.starter.properties;
+package com.github.jerrymice.spring.boot.mvc.properties;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

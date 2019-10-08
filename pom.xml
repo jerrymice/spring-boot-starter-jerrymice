@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>com.github.jerrymice.common</groupId>
-        <artifactId>common-pom</artifactId>
-        <version>0.0.4</version>
-    </parent>
+    <packaging>pom</packaging>
+    <modules>
+        <module>spring-boot-jerrymice</module>
+        <module>spring-boot-jerrymice-starter</module>
+        <module>spring-boot-jerrymice-example</module>
+        <module>spring-boot-jerrymice-test</module>
+    </modules>
     <groupId>com.github.jerrymice</groupId>
-    <artifactId>spring-boot-starter-jerrymice</artifactId>
-    <version>0.0.2-SNAPSHOT</version>
+    <artifactId>spring-boot-jerrymice-project</artifactId>
+    <version>0.0.3-SNAPSHOT</version>
     <name>${project.artifactId}</name>
     <description>
         this spring boot starter can auto configuration spring web mvc property value;
@@ -34,7 +37,8 @@
     <scm>
         <url>http://github.com/jerrymice/spring-boot-starter-jerrymice</url>
         <connection>scm:git:ssh://github.com/jerrymice/spring-boot-starter-jerrymice</connection>
-        <developerConnection>scm:git:ssh://git@github.com/jerrymice/spring-boot-starter-jerrymice.git</developerConnection>
+        <developerConnection>scm:git:ssh://git@github.com/jerrymice/spring-boot-starter-jerrymice.git
+        </developerConnection>
         <tag>HEAD</tag>
     </scm>
     <dependencies>
@@ -42,17 +46,17 @@
         <dependency>
             <groupId>com.github.jerrymice.common</groupId>
             <artifactId>common-entity</artifactId>
-            <version>0.0.2.beta7</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.jerrymice.common</groupId>
-            <artifactId>common-permission</artifactId>
-            <version>0.0.2.beta7</version>
+            <version>0.0.2.beta8-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.github.jerrymice.common</groupId>
             <artifactId>common-task</artifactId>
-            <version>0.0.2.beta7</version>
+            <version>0.0.2.beta8-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.jerrymice.common</groupId>
+            <artifactId>common-permission</artifactId>
+            <version>0.0.2.beta8-SNAPSHOT</version>
         </dependency>
         <!--junit-->
         <dependency>
@@ -73,7 +77,7 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-autoconfigure</artifactId>
+            <artifactId>spring-boot-starter</artifactId>
             <version>2.0.3.RELEASE</version>
         </dependency>
         <dependency>
@@ -124,4 +128,15 @@
             <version>5.0.7.RELEASE</version>
         </dependency>
     </dependencies>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.github.jerrymice.common</groupId>
+                <artifactId>common-pom</artifactId>
+                <version>0.0.4</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 </project>

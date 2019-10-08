@@ -1,6 +1,6 @@
-package com.github.jerrymice.spring.boot.starter.bean;
+package com.github.jerrymice.spring.boot.mvc.bean;
 
-import com.github.jerrymice.spring.boot.starter.config.WebAutoConfiguration;
+import com.github.jerrymice.spring.boot.EnableJerryMice;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebArgumentResolver;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -12,8 +12,8 @@ import javax.servlet.http.HttpSession;
  * @author tumingjian
  *         SpringMVC参数解析拦截器
  *         返回当前用户信息
- * @see com.github.jerrymice.spring.boot.starter.EnableJerryMiceSpringMvcConfiguration
- * @see WebAutoConfiguration.UserWebArgumentResolverConfigurer
+ * @see EnableJerryMice
+ * @see WebArgumentResolver
  */
 public class UserWebArgumentResolver implements WebArgumentResolver {
     /**

@@ -1,4 +1,4 @@
-package com.github.jerrymice.spring.boot.starter.interceptor;
+package com.github.jerrymice.spring.boot.mvc.interceptor;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
