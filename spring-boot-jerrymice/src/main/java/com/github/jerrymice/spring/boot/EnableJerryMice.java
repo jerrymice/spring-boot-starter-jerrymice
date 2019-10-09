@@ -76,17 +76,19 @@ public @interface EnableJerryMice {
      */
     String WEB_ORDER_MAPPING_ENABLED="jerrymice.spring.mvc.order-mapping-handler";
     /**
-     * 全局异常处理,默认true
+     * 全局异常处理,默认true,所有异常包装为Result类
      * @see GlobalExceptionHandler
+     * @see com.github.jerrymice.common.entity.entity.Result
      */
-    String WEB_GLOBAL_EXCEPTION_ENABLED="jerrymice.spring.mvc.global-exception.enabled";
+    String WEB_GLOBAL_EXCEPTION_ENABLED="jerrymice.spring.mvc.global-exception";
     /**
-     * 全局返回值response处理,所有JSON返回值都处理为Result接口形式的返回值,默认true
-     * 使用这个前,必须先启用 jerrymice.spring.mvc.jack-json-message-converter
-     * 接口的正常返回值将在result的body中.正常返回时代码为0000
+     *
+     * 所有Response JSON都统一包装为Result接口形式的返回值,默认true
+     * 接口的正常返回值将在result的body中.正常返回时result的code属性值为0000
      * @see com.github.jerrymice.common.entity.entity.Result
      * @see com.github.jerrymice.common.entity.code.GlobalErrorCode
+     * @see com.github.jerrymice.spring.boot.mvc.annotation.WrapResponseBody
      *
      */
-    String WEB_GLOBAL_RESPONSE_ENABLED="jerrymice.spring.mvc.global-response.enabled";
+    String WEB_UNIFY_RESPONSE_ENABLED ="jerrymice.spring.mvc.unify-response";
 }

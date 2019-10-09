@@ -11,7 +11,6 @@ import com.github.jerrymice.spring.boot.mvc.properties.SpringWebMvcProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -191,11 +190,8 @@ public class WebAutoConfiguration {
         private SpringWebMvcProperties.SessionStrategy config;
         @Autowired
         private RequestMappingHandlerAdapter requestMappingHandlerAdapter;
-        /**
-         * 是否启用全局统一响应
-         */
-        @Value("${" + EnableJerryMice.WEB_GLOBAL_RESPONSE_ENABLED + ":true}")
-        private boolean webGlobalResponseEnable;
+        @Autowired
+        private SpringWebMvcProperties springWebMvcProperties;
 
         /**
          * 默认启用SpringSessionMapRepository
@@ -247,9 +243,16 @@ public class WebAutoConfiguration {
             return localValidatorFactoryBean;
         }
 
+        /**
+         * 启用统一的Result JSON响应值时,需要替换掉原始的RequestResponseBodyMethodProcessor
+         * @see com.github.jerrymice.spring.boot.mvc.annotation.WrapResponseBody
+         * @see com.github.jerrymice.common.entity.entity.Result
+         * @see HandlerMethodReturnValueHandler
+         * @throws Exception
+         */
         @Override
         public void afterPropertiesSet() throws Exception {
-            if(webGlobalResponseEnable){
+            if(springWebMvcProperties.isUnifyResponse()){
                 List<HandlerMethodReturnValueHandler> unmodifiableList = requestMappingHandlerAdapter.getReturnValueHandlers();
                 List<HandlerMethodReturnValueHandler> list = new ArrayList<>(unmodifiableList.size());
                 for (HandlerMethodReturnValueHandler returnValueHandler : unmodifiableList) {

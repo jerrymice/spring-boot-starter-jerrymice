@@ -16,16 +16,23 @@ public class SpringWebMvcProperties {
     /**
      * 存入user信息在session的KEY值
      */
-    String userSessionKey = "currentUser";
+    private String userSessionKey = "currentUser";
     /**
      * 是否添加默认的JSON Converter
      */
-    boolean jackJsonMessageConverter = true;
+    private boolean jackJsonMessageConverter = true;
     /**
      * 启用增强的OrderRequestMappingHandlerMapping
      */
-    boolean orderMappingHandler = false;
-
+    private boolean orderMappingHandler = false;
+    /**
+     * 启用全局JSON格式统一响应,所有的响应内容都包装为Result类
+     */
+    private boolean unifyResponse=true;
+    /**
+     * 使用全局异常处理器
+     */
+    private boolean globalException=true;
     /**
      * 设置静态资源映射,每一个数组的相同下标对应一组资源
      */
@@ -133,6 +140,8 @@ public class SpringWebMvcProperties {
 
     /**
      *
+     * @author tumingjian
+     * 说明:登录拦截器配置
      */
     @Data
     @ConfigurationProperties(prefix = "jerrymice.spring.mvc.login-interceptor")
@@ -141,35 +150,44 @@ public class SpringWebMvcProperties {
         /**
          * 是否启用登录拦截器
          */
-        boolean enabled = true;
+        private boolean enabled = true;
         /**
          * 当前user信息在session的KEY值
          */
-        String userSessionKey = SpringWebMvcProperties.this.userSessionKey;
+        private String userSessionKey = SpringWebMvcProperties.this.userSessionKey;
         /**
          * 要拦截的URL Pattern列表
          */
-        String[] pathPatterns;
+        private String[] pathPatterns;
         /**
          * 要排除的URL Pattern列表
          */
-        String[] excludePathPatterns;
+        private String[] excludePathPatterns;
         /**
          * 拦截器顺序
          */
-        int order = 1;
+        private int order = 1;
     }
     /**
      * @author tumingjian
-     * 说明:
+     * 说明:权限框架配置
      */
     @Data
     @ConfigurationProperties(prefix = "jerrymice.spring.mvc.security")
     @Configuration
     public class JerryMiceSecurityProperties {
-        boolean enabled = false;
-        String userSessionKey = SpringWebMvcProperties.this.userSessionKey;
-        String resourceSessionKey = "currentResource";
+        /**
+         * 是否启用权限控制框架
+         */
+        private boolean enabled = false;
+        /**
+         * 用户的sessionKey名称
+         */
+        private String userSessionKey = SpringWebMvcProperties.this.userSessionKey;
+        /**
+         * 用户的所拥有相关资源的Key名称
+         */
+        private String resourceSessionKey = "currentResource";
 
 
     }
