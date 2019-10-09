@@ -7,9 +7,6 @@ import com.github.jerrymice.spring.boot.mvc.bean.SuperHeaderHttpSessionStrategy;
 import com.github.jerrymice.spring.boot.mvc.bean.UserWebArgumentResolver;
 import com.github.jerrymice.spring.boot.mvc.config.*;
 import com.github.jerrymice.spring.boot.mvc.interceptor.UserLoginInterceptor;
-import com.github.jerrymice.spring.boot.mvc.properties.JerryMiceWebMvcTaskProperties;
-import com.github.jerrymice.spring.boot.mvc.properties.SpringWebMvcProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.*;
@@ -21,15 +18,7 @@ import java.lang.annotation.*;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@EnableConfigurationProperties({
-        JerryMiceWebMvcTaskProperties.class,
-        SpringWebMvcProperties.class})
-
-@Import({SecurityAutoConfiguration.class,
-        TaskAutoConfiguration.class,
-        WebMvcAutoRegistrations.class,
-        WebAutoConfiguration.class,
-        WebGlobalExceptionConfiguration.class})
+@Import(JerrymiceAutoConfiguration.class)
 public @interface EnableJerryMice {
 
     /**

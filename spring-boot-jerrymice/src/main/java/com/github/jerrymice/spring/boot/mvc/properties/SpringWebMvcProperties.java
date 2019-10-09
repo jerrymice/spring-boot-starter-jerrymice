@@ -148,10 +148,6 @@ public class SpringWebMvcProperties {
     @Configuration
     public class LoginInterceptor {
         /**
-         * 是否启用登录拦截器
-         */
-        private boolean enabled = true;
-        /**
          * 当前user信息在session的KEY值
          */
         private String userSessionKey = SpringWebMvcProperties.this.userSessionKey;
@@ -167,6 +163,10 @@ public class SpringWebMvcProperties {
          * 拦截器顺序
          */
         private int order = 1;
+        /**
+         * 是否启用登录拦截器
+         */
+        private boolean enabled = true;
     }
     /**
      * @author tumingjian
