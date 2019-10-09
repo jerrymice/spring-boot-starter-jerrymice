@@ -146,39 +146,6 @@ public class WebAutoConfiguration {
             converters.add(1, new StringHttpMessageConverter(Charset.forName("UTF-8")));
         }
     }
-
-    /**
-     * @author tumingjian
-     * 说明: 映射项目下webapp/resource/目录为静态资源/**
-     */
-    @Configuration
-    @ConditionalOnWebApplication
-    @ConditionalOnProperty(name = EnableJerryMice.WEB_RESOURCE_HANDLER_ENABLE, havingValue = "true", matchIfMissing = true)
-    public class MappingStaticResourceWebMvcConfigurer implements WebMvcConfigurer {
-        @Autowired
-        private SpringWebMvcProperties.MappingStaticResource config;
-
-        @Override
-        public void addResourceHandlers(ResourceHandlerRegistry registry) {
-            if (config.getResourceHandler().length == config.getResourceLocation().length) {
-                for (int i = 0; i < config.getResourceHandler().length; i++) {
-                    ResourceHandlerRegistration resourceHandlerRegistration = registry.addResourceHandler(config.getResourceHandler()[i]).addResourceLocations(config.getResourceLocation()[i]);
-                    if (config.getCachePeriod() != null && config.getCachePeriod().length > i) {
-                        resourceHandlerRegistration
-                                .setCachePeriod(config.getCachePeriod()[i]);
-                    }
-                    if (config.getCacheResource() != null && config.getCacheResource().length > i) {
-                        resourceHandlerRegistration
-                                .resourceChain(config.getCacheResource()[i]);
-                    }
-
-                }
-            } else {
-                throw new ResourceAccessException("application config property value jerrymice.spring.mvc.resource-handler length need equals jerrymice.spring.mvc.resource-location length");
-            }
-        }
-    }
-
     /**
      * @author tumingjian
      * 说明:先启用spring session.再根据配置启用SuperHeaderHttpSessionStrategy

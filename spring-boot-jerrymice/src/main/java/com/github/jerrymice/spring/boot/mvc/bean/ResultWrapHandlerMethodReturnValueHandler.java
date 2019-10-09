@@ -1,7 +1,9 @@
 package com.github.jerrymice.spring.boot.mvc.bean;
 
+import com.github.jerrymice.common.entity.code.GlobalErrorCode;
 import com.github.jerrymice.common.entity.entity.Result;
 import com.github.jerrymice.common.entity.entity.ResultInfo;
+import com.github.jerrymice.common.entity.entity.Status;
 import com.github.jerrymice.spring.boot.mvc.annotation.WrapResponseBody;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.annotation.AnnotatedElementUtils;
@@ -33,12 +35,18 @@ public class ResultWrapHandlerMethodReturnValueHandler implements HandlerMethodR
     @Override
     public void handleReturnValue(Object returnValue, MethodParameter returnType, ModelAndViewContainer mavContainer, NativeWebRequest webRequest) throws Exception {
         WrapResponseBody methodAnnotation = returnType.getMethodAnnotation(WrapResponseBody.class);
-        boolean notWrap = returnValue instanceof Result || (methodAnnotation != null && !methodAnnotation.value());
-        if (notWrap) {
-            this.delegate.handleReturnValue(returnValue, returnType, mavContainer, webRequest);
-        } else {
+        Result result;
+        if (returnValue instanceof Result && (result = ((Result) returnValue)).isEmpty() && !result.getCode().equals(GlobalErrorCode.REQUEST_SUCCESS.getCode())) {
+            /**
+             * 如果是错误的结果且body为空,那么序列化时不序列化body.也就是JSON没有body:null字符串,否则原样返回
+             */
+            Status wrapped = Status.wrapped(result.getCode(), result.getMessage());
+            this.delegate.handleReturnValue(wrapped, returnType, mavContainer, webRequest);
+        } else if (methodAnnotation == null || methodAnnotation.value()) {
             ResultInfo resultInfo = new ResultInfo(true).setBody(returnValue);
             this.delegate.handleReturnValue(resultInfo, returnType, mavContainer, webRequest);
+        } else {
+            this.delegate.handleReturnValue(returnValue, returnType, mavContainer, webRequest);
         }
     }
 }

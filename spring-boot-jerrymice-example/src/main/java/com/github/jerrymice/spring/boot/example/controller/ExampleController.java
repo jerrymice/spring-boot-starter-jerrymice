@@ -1,4 +1,4 @@
-package com.github.jerrymice.spring.boot.example;
+package com.github.jerrymice.spring.boot.example.controller;
 
 import com.github.jerrymice.common.entity.code.GlobalErrorCode;
 import com.github.jerrymice.common.entity.entity.Result;

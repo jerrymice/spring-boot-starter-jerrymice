@@ -36,28 +36,6 @@ public class SpringWebMvcProperties {
     /**
      * 设置静态资源映射,每一个数组的相同下标对应一组资源
      */
-    @Data
-    @ConfigurationProperties(prefix = "jerrymice.spring.mvc.mapping-static-resource")
-    @Configuration
-    public class MappingStaticResource {
-        /**
-         * 设置映射路径
-         */
-        private String[] resourceHandler = new String[]{"/**"};
-        /**
-         * 本地路径
-         */
-        private String[] resourceLocation = new String[]{"/resource/"};
-        /**
-         * 是否缓存静态资源
-         */
-        private Boolean[] cacheResource = new Boolean[]{true};
-        /**
-         * 是否限制缓存配额
-         */
-        private Integer[] cachePeriod = new Integer[]{0};
-    }
-
     /**
      * 是否加入当前用户的参数拦截.必须在登录之后将当前用户信息以userSessionKey的值为key存入session中才能生效
      */

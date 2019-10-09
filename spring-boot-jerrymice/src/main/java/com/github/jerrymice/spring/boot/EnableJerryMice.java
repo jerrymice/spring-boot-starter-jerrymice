@@ -42,10 +42,6 @@ public @interface EnableJerryMice {
      */
     String WEB_LOGIN_INTERCEPTOR_ENABLE="jerrymice.spring.mvc.login-interceptor.enabled";
     /**
-     * 是否启用默认的静态资源路径,默认true
-     */
-    String WEB_RESOURCE_HANDLER_ENABLE = "jerrymice.spring.mvc.mapping-static-resource";
-    /**
      * 是否启用默认的MessageConverters,默认true
      */
     String WEB_MESSAGE_CONVERTERS_ENABLE = "jerrymice.spring.mvc.jack-json-message-converter";
