@@ -21,7 +21,7 @@
     <description>
         this spring boot starter can auto configuration spring web mvc property value;
     </description>
-    <url>https://github.com/jerrymice/spring-boot-starter-jerrymice</url>
+    <url>https://github.com/jerrymice/spring-boot-jerrymice-project</url>
     <licenses>
         <license>
             <name>The Apache License, Version 2.0</name>
@@ -37,12 +37,12 @@
         </developer>
     </developers>
     <issueManagement>
-        <url>https://github.com/jerrymice/common-pom/issues</url>
+        <url>https://github.com/jerrymice/spring-boot-jerrymice-project/issues</url>
     </issueManagement>
     <scm>
-        <url>http://github.com/jerrymice/spring-boot-starter-jerrymice</url>
-        <connection>scm:git:ssh://github.com/jerrymice/spring-boot-starter-jerrymice</connection>
-        <developerConnection>scm:git:ssh://git@github.com/jerrymice/spring-boot-starter-jerrymice.git
+        <url>http://github.com/jerrymice/spring-boot-jerrymice-project</url>
+        <connection>scm:git:ssh://github.com/jerrymice/spring-boot-jerrymice-project</connection>
+        <developerConnection>scm:git:ssh://git@github.com/jerrymice/spring-boot-jerrymice-project.git
         </developerConnection>
         <tag>HEAD</tag>
     </scm>
