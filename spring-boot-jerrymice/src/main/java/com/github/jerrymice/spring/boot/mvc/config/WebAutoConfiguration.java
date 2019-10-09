@@ -4,13 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.github.jerrymice.spring.boot.EnableJerryMice;
-import com.github.jerrymice.spring.boot.mvc.bean.ResultMappingJackson2HttpMessageConverter;
-import com.github.jerrymice.spring.boot.mvc.bean.SuperHeaderHttpSessionStrategy;
-import com.github.jerrymice.spring.boot.mvc.bean.UserWebArgumentResolver;
+import com.github.jerrymice.spring.boot.mvc.bean.*;
 import com.github.jerrymice.spring.boot.mvc.interceptor.InterceptUserHandler;
 import com.github.jerrymice.spring.boot.mvc.interceptor.UserLoginInterceptor;
 import com.github.jerrymice.spring.boot.mvc.properties.SpringWebMvcProperties;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -30,11 +29,15 @@ import org.springframework.session.web.http.HttpSessionStrategy;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.servlet.config.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
+import org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor;
 import org.springframework.web.servlet.mvc.method.annotation.ServletWebArgumentResolverAdapter;
 
 import java.math.BigInteger;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -62,7 +65,6 @@ public class WebAutoConfiguration {
     public class UserWebArgumentResolverConfigurer implements WebMvcConfigurer {
         @Autowired
         private SpringWebMvcProperties.UserArgumentResolver config;
-
         @Override
         public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
             resolvers.add(new ServletWebArgumentResolverAdapter(new UserWebArgumentResolver(config.getUserSessionKey(), config.isEnabledCacheUserClass(), config.getMethodParamName())));
@@ -90,12 +92,12 @@ public class WebAutoConfiguration {
                     .order(loginConfig.getOrder());
             String[] pathPatterns = loginConfig.getPathPatterns();
             String[] excludePathPatterns = loginConfig.getExcludePathPatterns();
-            if(pathPatterns!=null){
+            if (pathPatterns != null) {
                 registration.addPathPatterns(pathPatterns);
-            }else{
+            } else {
                 log.warn("您启用了登录拦截器,但却没有设置登录拦截器要拦截的地址");
             }
-            if(excludePathPatterns!=null){
+            if (excludePathPatterns != null) {
                 registration.excludePathPatterns(excludePathPatterns);
             }
         }
@@ -130,24 +132,18 @@ public class WebAutoConfiguration {
     @ConditionalOnWebApplication
     @ConditionalOnProperty(name = EnableJerryMice.WEB_MESSAGE_CONVERTERS_ENABLE, havingValue = "true", matchIfMissing = true)
     public class MessageConvertersWebMvcConfigurer implements WebMvcConfigurer {
-        @Value("${"+EnableJerryMice.WEB_GLOBAL_RESPONSE_ENABLED+":true}")
-        private boolean webGlobalResponseEnable;
+
         @Override
         public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
-            MappingJackson2HttpMessageConverter jackson2HttpMessageConverter;
-            if(webGlobalResponseEnable){
-                jackson2HttpMessageConverter=new MappingJackson2HttpMessageConverter();
-            }else{
-                jackson2HttpMessageConverter=new ResultMappingJackson2HttpMessageConverter();
-            }
+            MappingJackson2HttpMessageConverter converter=new MappingJackson2HttpMessageConverter();
             ObjectMapper objectMapper = new ObjectMapper();
             SimpleModule simpleModule = new SimpleModule();
             simpleModule.addSerializer(BigInteger.class, ToStringSerializer.instance);
             simpleModule.addSerializer(Long.class, ToStringSerializer.instance);
             simpleModule.addSerializer(Long.TYPE, ToStringSerializer.instance);
             objectMapper.registerModule(simpleModule);
-            jackson2HttpMessageConverter.setObjectMapper(objectMapper);
-            converters.add(0, jackson2HttpMessageConverter);
+            converter.setObjectMapper(objectMapper);
+            converters.add(0, converter);
             converters.add(1, new StringHttpMessageConverter(Charset.forName("UTF-8")));
         }
     }
@@ -190,9 +186,16 @@ public class WebAutoConfiguration {
      */
     @Configuration
     @ConditionalOnWebApplication
-    public class SuperHttpSessionAutoConfiguration {
+    public class BeanConfiguration implements InitializingBean {
         @Autowired
         private SpringWebMvcProperties.SessionStrategy config;
+        @Autowired
+        private RequestMappingHandlerAdapter requestMappingHandlerAdapter;
+        /**
+         * 是否启用全局统一响应
+         */
+        @Value("${" + EnableJerryMice.WEB_GLOBAL_RESPONSE_ENABLED + ":true}")
+        private boolean webGlobalResponseEnable;
 
         /**
          * 默认启用SpringSessionMapRepository
@@ -231,8 +234,10 @@ public class WebAutoConfiguration {
         public HttpSessionStrategy httpSessionStrategy() {
             return new SuperHeaderHttpSessionStrategy(config.getSessionAliasParamName(), config.isSupportHttpHeader(), config.isSupportQueryString(), config.isSupportCookie());
         }
+
         /**
          * 支持在 ConstraintValidator接口中直接用Autowired流解引用spring中的bean,用于自定义的注解验证器.
+         *
          * @return LocalValidatorFactoryBean
          */
         @Bean
@@ -242,6 +247,21 @@ public class WebAutoConfiguration {
             return localValidatorFactoryBean;
         }
 
+        @Override
+        public void afterPropertiesSet() throws Exception {
+            if(webGlobalResponseEnable){
+                List<HandlerMethodReturnValueHandler> unmodifiableList = requestMappingHandlerAdapter.getReturnValueHandlers();
+                List<HandlerMethodReturnValueHandler> list = new ArrayList<>(unmodifiableList.size());
+                for (HandlerMethodReturnValueHandler returnValueHandler : unmodifiableList) {
+                    if (returnValueHandler instanceof RequestResponseBodyMethodProcessor) {
+                        list.add(new ResultWrapHandlerMethodReturnValueHandler(returnValueHandler));
+                    } else {
+                        list.add(returnValueHandler);
+                    }
+                }
+                requestMappingHandlerAdapter.setReturnValueHandlers(list);
+            }
+        }
     }
 
 

@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
  * @author tumingjian
  * 说明:更强的HttpSessionStrategy策略.
  * @see EnableJerryMice
- * @see WebAutoConfiguration.SuperHttpSessionAutoConfiguration
+ * @see WebAutoConfiguration.BeanConfiguration
  */
 public class SuperHeaderHttpSessionStrategy implements HttpSessionStrategy {
     /**

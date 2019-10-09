@@ -5,13 +5,13 @@
     <packaging>pom</packaging>
     <modules>
         <module>spring-boot-jerrymice</module>
-        <module>spring-boot-jerrymice-starter</module>
+        <module>spring-boot-starter-jerrymice</module>
         <module>spring-boot-jerrymice-example</module>
         <module>spring-boot-jerrymice-test</module>
     </modules>
     <groupId>com.github.jerrymice</groupId>
     <artifactId>spring-boot-jerrymice-project</artifactId>
-    <version>0.0.3-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
     <name>${project.artifactId}</name>
     <description>
         this spring boot starter can auto configuration spring web mvc property value;
@@ -47,6 +47,12 @@
             <groupId>com.github.jerrymice.common</groupId>
             <artifactId>common-entity</artifactId>
             <version>0.0.2.beta8-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>gson</artifactId>
+                    <groupId>com.google.code.gson</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.github.jerrymice.common</groupId>
