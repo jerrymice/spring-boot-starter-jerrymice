@@ -98,6 +98,8 @@ public class WebAutoConfiguration {
             }
             if (excludePathPatterns != null) {
                 registration.excludePathPatterns(excludePathPatterns);
+            }else{
+                log.warn("您启用了登录拦截器,至少应该排除登录地址");
             }
         }
     }
