@@ -72,7 +72,6 @@ public @interface EnableJerryMice {
      * 接口的正常返回值将在result的body中.正常返回时result的code属性值为0000
      * @see com.github.jerrymice.common.entity.entity.Result
      * @see com.github.jerrymice.common.entity.code.GlobalErrorCode
-     * @see com.github.jerrymice.spring.boot.mvc.annotation.WrapResponseBody
      *
      */
     String WEB_UNIFY_RESPONSE_ENABLED ="jerrymice.spring.mvc.unify-response";
