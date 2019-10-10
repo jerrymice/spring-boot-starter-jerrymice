@@ -1,4 +1,4 @@
-package com.github.jerrymice.spring.boot.mvc.bean;
+package com.github.jerrymice.spring.boot.mvc.result;
 
 import com.github.jerrymice.common.entity.code.GlobalErrorCode;
 import com.github.jerrymice.common.entity.entity.Result;
@@ -15,15 +15,15 @@ public class ReturnWrapValue extends HashMap<String,Object> {
     private final  String codeKey ="code";
     private final  String messageKey ="message";
     private final  String bodyKey ="body";
-    protected ReturnWrapValue() {
+    public ReturnWrapValue() {
     }
-    protected ReturnWrapValue(Status status, Object body){
+    public ReturnWrapValue(Status status, Object body){
         this(status.getCode(),status.getMessage(),body);
     }
-    protected ReturnWrapValue(Result result){
+    public ReturnWrapValue(Result result){
         this(result.getCode(),result.getMessage(),result.getBody());
     }
-    protected ReturnWrapValue(String code,String message,Object body) {
+    public ReturnWrapValue(String code,String message,Object body) {
         this.put(codeKey,code);
         this.put(messageKey,message);
         //请求成功,始终有body字段,如果是请求失败,且没有body,那么去掉body字段

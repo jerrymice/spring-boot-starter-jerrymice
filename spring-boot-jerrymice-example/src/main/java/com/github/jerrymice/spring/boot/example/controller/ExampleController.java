@@ -4,7 +4,7 @@ import com.github.jerrymice.common.entity.code.GlobalErrorCode;
 import com.github.jerrymice.common.entity.entity.Result;
 import com.github.jerrymice.common.entity.entity.ResultInfo;
 import com.github.jerrymice.common.entity.ex.ResultException;
-import com.github.jerrymice.spring.boot.mvc.annotation.WrapResponseBody;
+import com.github.jerrymice.spring.boot.mvc.result.DelegateRequestResponseBodyMethodProcessor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -23,7 +23,7 @@ import java.util.Map;
  * 创建时间: 2019-10-08 11:07
  * 功能说明:
  * @see com.github.jerrymice.common.entity.entity.Result
- * @see com.github.jerrymice.spring.boot.mvc.bean.ResultWrapHandlerMethodReturnValueHandler
+ * @see DelegateRequestResponseBodyMethodProcessor
  * @see com.github.jerrymice.spring.boot.mvc.bean.GlobalExceptionHandler
  * */
 @RestController
@@ -85,7 +85,6 @@ public class ExampleController {
      * }
      */
     @RequestMapping("/wrap")
-    @WrapResponseBody
     public Map<String, Object> wrap() {
         HashMap<String, Object> result = new HashMap<>();
         result.put("name", "tumingjian");
@@ -101,7 +100,6 @@ public class ExampleController {
      *     }
      */
     @RequestMapping("/notWrap")
-    @WrapResponseBody(value = false)
     public Map<String, Object> notWrap() {
         HashMap<String, Object> result = new HashMap<>();
         result.put("name", "tumingjian");

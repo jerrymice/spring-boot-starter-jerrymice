@@ -8,15 +8,19 @@ import com.github.jerrymice.spring.boot.mvc.bean.*;
 import com.github.jerrymice.spring.boot.mvc.interceptor.InterceptUserHandler;
 import com.github.jerrymice.spring.boot.mvc.interceptor.UserLoginInterceptor;
 import com.github.jerrymice.spring.boot.mvc.properties.SpringWebMvcProperties;
+import com.github.jerrymice.spring.boot.mvc.result.DelegateRequestResponseBodyMethodProcessor;
+import com.github.jerrymice.spring.boot.mvc.result.ResultWrapHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -26,7 +30,6 @@ import org.springframework.session.SessionRepository;
 import org.springframework.session.config.annotation.web.http.SpringHttpSessionConfiguration;
 import org.springframework.session.web.http.HttpSessionStrategy;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
-import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.servlet.config.annotation.*;
@@ -64,6 +67,7 @@ public class WebAutoConfiguration {
     public class UserWebArgumentResolverConfigurer implements WebMvcConfigurer {
         @Autowired
         private SpringWebMvcProperties.UserArgumentResolver config;
+
         @Override
         public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
             resolvers.add(new ServletWebArgumentResolverAdapter(new UserWebArgumentResolver(config.getUserSessionKey(), config.isEnabledCacheUserClass(), config.getMethodParamName())));
@@ -98,7 +102,7 @@ public class WebAutoConfiguration {
             }
             if (excludePathPatterns != null) {
                 registration.excludePathPatterns(excludePathPatterns);
-            }else{
+            } else {
                 log.warn("您启用了登录拦截器,至少应该排除登录地址");
             }
         }
@@ -136,7 +140,7 @@ public class WebAutoConfiguration {
 
         @Override
         public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
-            MappingJackson2HttpMessageConverter converter=new MappingJackson2HttpMessageConverter();
+            MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
             ObjectMapper objectMapper = new ObjectMapper();
             SimpleModule simpleModule = new SimpleModule();
             simpleModule.addSerializer(BigInteger.class, ToStringSerializer.instance);
@@ -150,17 +154,66 @@ public class WebAutoConfiguration {
     }
     /**
      * @author tumingjian
-     * 说明:先启用spring session.再根据配置启用SuperHeaderHttpSessionStrategy
+     * 创建时间: 2019-10-10 16:22
+     * 功能说明: 默认统一的ControllerJSON返值值结果处理类
      */
     @Configuration
     @ConditionalOnWebApplication
-    public class BeanConfiguration implements InitializingBean {
-        @Autowired
-        private SpringWebMvcProperties.SessionStrategy config;
+    @ConditionalOnMissingBean(ResultWrapHandler.class)
+    @ConditionalOnProperty(name = EnableJerryMice.WEB_UNIFY_RESPONSE_ENABLED, havingValue = "true", matchIfMissing = true)
+    public class DefaultResultWrapHandler implements ResultWrapHandler {
+
+    }
+    /**
+     * @author tumingjian
+     * 创建时间: 2019-10-10 16:22
+     * 功能说明: 统一的ControllerJSON返值值结果处理配置类
+     */
+    @Configuration
+    @ConditionalOnWebApplication
+    @ConditionalOnProperty(name = EnableJerryMice.WEB_UNIFY_RESPONSE_ENABLED, havingValue = "true", matchIfMissing = true)
+    @AutoConfigureAfter(BeanConfiguration.class)
+    public class ResultWrapConfiguration implements InitializingBean {
         @Autowired
         private RequestMappingHandlerAdapter requestMappingHandlerAdapter;
         @Autowired
         private SpringWebMvcProperties springWebMvcProperties;
+        @Autowired(required = false)
+        private ResultWrapHandler resultWrapHandler;
+
+        /**
+         * 启用统一的Result JSON响应值时,需要替换掉原始的RequestResponseBodyMethodProcessor
+         * * @see com.github.jerrymice.common.entity.entity.Result
+         *
+         * @throws Exception
+         * @see HandlerMethodReturnValueHandler
+         */
+        @Override
+        public void afterPropertiesSet() throws Exception {
+            if (springWebMvcProperties.isUnifyResponse()) {
+                List<HandlerMethodReturnValueHandler> unmodifiableList = requestMappingHandlerAdapter.getReturnValueHandlers();
+                List<HandlerMethodReturnValueHandler> list = new ArrayList<>(unmodifiableList.size());
+                for (HandlerMethodReturnValueHandler returnValueHandler : unmodifiableList) {
+                    if (returnValueHandler instanceof RequestResponseBodyMethodProcessor) {
+                        list.add(new DelegateRequestResponseBodyMethodProcessor(returnValueHandler, resultWrapHandler));
+                    } else {
+                        list.add(returnValueHandler);
+                    }
+                }
+                requestMappingHandlerAdapter.setReturnValueHandlers(list);
+            }
+        }
+    }
+
+    /**
+     * @author tumingjian
+     * 说明:先启用spring session.再根据配置启用SuperHeaderHttpSessionStrategy
+     */
+    @Configuration
+    @ConditionalOnWebApplication
+    public class BeanConfiguration {
+        @Autowired
+        private SpringWebMvcProperties.SessionStrategy config;
 
         /**
          * 默认启用SpringSessionMapRepository
@@ -212,28 +265,6 @@ public class WebAutoConfiguration {
             return localValidatorFactoryBean;
         }
 
-        /**
-         * 启用统一的Result JSON响应值时,需要替换掉原始的RequestResponseBodyMethodProcessor
-         * @see com.github.jerrymice.spring.boot.mvc.annotation.WrapResponseBody
-         * @see com.github.jerrymice.common.entity.entity.Result
-         * @see HandlerMethodReturnValueHandler
-         * @throws Exception
-         */
-        @Override
-        public void afterPropertiesSet() throws Exception {
-            if(springWebMvcProperties.isUnifyResponse()){
-                List<HandlerMethodReturnValueHandler> unmodifiableList = requestMappingHandlerAdapter.getReturnValueHandlers();
-                List<HandlerMethodReturnValueHandler> list = new ArrayList<>(unmodifiableList.size());
-                for (HandlerMethodReturnValueHandler returnValueHandler : unmodifiableList) {
-                    if (returnValueHandler instanceof RequestResponseBodyMethodProcessor) {
-                        list.add(new ResultWrapHandlerMethodReturnValueHandler(returnValueHandler));
-                    } else {
-                        list.add(returnValueHandler);
-                    }
-                }
-                requestMappingHandlerAdapter.setReturnValueHandlers(list);
-            }
-        }
     }
 
 

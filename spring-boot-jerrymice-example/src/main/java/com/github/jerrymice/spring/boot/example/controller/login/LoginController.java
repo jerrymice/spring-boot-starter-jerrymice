@@ -2,7 +2,6 @@ package com.github.jerrymice.spring.boot.example.controller.login;
 
 import com.github.jerrymice.common.entity.entity.Status;
 import com.github.jerrymice.common.entity.ex.ResultException;
-import com.github.jerrymice.spring.boot.mvc.annotation.WrapResponseBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -45,7 +44,6 @@ public class LoginController {
      * @return
      */
     @RequestMapping("/exclude/test")
-    @WrapResponseBody(value = false)
     public String test(){
         return "这是一个被排除的URL";
     }
