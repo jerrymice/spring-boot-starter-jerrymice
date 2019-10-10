@@ -6,10 +6,14 @@ import com.github.jerrymice.common.entity.entity.ResultInfo;
 import com.github.jerrymice.common.entity.entity.Status;
 import com.github.jerrymice.spring.boot.mvc.annotation.WrapResponseBody;
 import org.springframework.core.MethodParameter;
+import org.springframework.core.ResolvableType;
 import org.springframework.core.annotation.AnnotatedElementUtils;
+import org.springframework.http.HttpEntity;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.method.support.ModelAndViewContainer;
+
+import java.lang.reflect.Type;
 
 
 /**
@@ -35,18 +39,38 @@ public class ResultWrapHandlerMethodReturnValueHandler implements HandlerMethodR
     @Override
     public void handleReturnValue(Object returnValue, MethodParameter returnType, ModelAndViewContainer mavContainer, NativeWebRequest webRequest) throws Exception {
         WrapResponseBody methodAnnotation = returnType.getMethodAnnotation(WrapResponseBody.class);
-        Result result;
-        if (returnValue instanceof Result && (result = ((Result) returnValue)).isEmpty() && !result.getCode().equals(GlobalErrorCode.REQUEST_SUCCESS.getCode())) {
-            /**
-             * 如果是错误的结果且body为空,那么序列化时不序列化body.也就是JSON没有body:null字符串,否则原样返回
-             */
-            Status wrapped = Status.wrapped(result.getCode(), result.getMessage());
-            this.delegate.handleReturnValue(wrapped, returnType, mavContainer, webRequest);
-        } else if (methodAnnotation == null || methodAnnotation.value()) {
-            ResultInfo resultInfo = new ResultInfo(true).setBody(returnValue);
-            this.delegate.handleReturnValue(resultInfo, returnType, mavContainer, webRequest);
-        } else {
+        Class<?> returnTypeClass = returnType.getMethod().getReturnType();
+
+        //处理无注解或注解value为true的所有方法返回值
+        if (methodAnnotation == null || methodAnnotation.value()) {
+            ReturnWrapValue result;
+            //处理void方法
+            if (returnTypeClass.equals(void.class)) {
+                result = new ReturnWrapValue(GlobalErrorCode.REQUEST_SUCCESS.getStatus(),null);
+            } else if (returnTypeClass.isAssignableFrom(Result.class)) {
+                result = new ReturnWrapValue((Result)returnValue);
+            } else if (returnTypeClass.isAssignableFrom(Status.class)) {
+                result = new ReturnWrapValue((Status)returnValue,null);
+            } else {
+                result = new ReturnWrapValue(GlobalErrorCode.REQUEST_SUCCESS.getStatus(),returnValue);
+            }
+            MethodParameter methodParameter = new MethodParameter(returnType){
+                @Override
+                public Type getGenericParameterType() {
+                    if (HttpEntity.class.isAssignableFrom(this.getParameterType())) {
+                        return super.getGenericParameterType();
+                    }
+                    else {
+                        return ResolvableType.forType(ReturnWrapValue.class).getType();
+                    }
+                }
+            };
+            this.delegate.handleReturnValue(result, methodParameter, mavContainer, webRequest);
+        }else{
             this.delegate.handleReturnValue(returnValue, returnType, mavContainer, webRequest);
         }
+
     }
+
+
 }

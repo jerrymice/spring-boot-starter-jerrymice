@@ -69,7 +69,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(NullPointerException.class)
     public Status dealNullPointerException(NullPointerException e) {
         log.error("空指针异常:", e);
-        return Status.wrapped(GlobalErrorCode.SYSTEM_UNKNOWN_ERROR.getCode(), "空指针错误：" + e.getLocalizedMessage());
+        return Status.wrapped(GlobalErrorCode.UNKNOWN_SYSTEM_ERROR.getCode(), "空指针错误：" + e.getLocalizedMessage());
     }
 
     /**
@@ -82,7 +82,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public Status handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
         log.error("不支持当前请求方法", e.getLocalizedMessage());
-        return Status.wrapped(GlobalErrorCode.SYSTEM_UNKNOWN_ERROR.getCode(), "不支持当前请求方法");
+        return Status.wrapped(GlobalErrorCode.UNKNOWN_SYSTEM_ERROR.getCode(), "不支持当前请求方法");
     }
 
     /**
@@ -95,7 +95,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
     public Status handleHttpMediaTypeNotSupportedException(Exception e) {
         log.error("不支持当前媒体类型", e.getLocalizedMessage());
-        return Status.wrapped(GlobalErrorCode.SYSTEM_UNKNOWN_ERROR.getCode(), "不支持当前媒体类型");
+        return Status.wrapped(GlobalErrorCode.UNKNOWN_SYSTEM_ERROR.getCode(), "不支持当前媒体类型");
     }
 
     /**
@@ -128,7 +128,7 @@ public class GlobalExceptionHandler {
             return Status.wrapped(GlobalErrorCode.INVALID_SERVICE_API.getCode(), url + GlobalErrorCode.INVALID_SERVICE_API.getMessage());
         } else {
             log.error("Rest Controller 异常", e);
-            return Status.wrapped(GlobalErrorCode.SYSTEM_UNKNOWN_ERROR.getCode(), e.getLocalizedMessage());
+            return Status.wrapped(GlobalErrorCode.UNKNOWN_SYSTEM_ERROR.getCode(), e.getLocalizedMessage());
         }
     }
 

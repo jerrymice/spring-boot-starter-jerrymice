@@ -17,6 +17,6 @@ public interface InterceptUserHandler {
      * @return 返回要JSON序列化的对象.
      */
     default Object returnObject(HttpServletRequest request){
-        return  new ResultInfo(GlobalErrorCode.INVALID_SYSTEM_USER);
+        return  GlobalErrorCode.INVALID_USER_SESSION.getStatus();
     }
 }
