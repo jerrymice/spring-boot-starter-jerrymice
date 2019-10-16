@@ -37,7 +37,9 @@ import org.springframework.session.web.http.HttpSessionStrategy;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.config.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 import org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor;
 import org.springframework.web.servlet.mvc.method.annotation.ServletWebArgumentResolverAdapter;
@@ -229,6 +231,34 @@ public class WebAutoConfiguration {
                     }
                 }
                 requestMappingHandlerAdapter.setReturnValueHandlers(list);
+            }
+        }
+    }
+    /**
+     * 这是一个启用了统一JSON返回值时,全局统一异常HttpStatus为200的配置类.
+     */
+    @Configuration
+    @ConditionalOnWebApplication
+    @ConditionalOnProperty(name = {EnableJerryMice.WEB_UNIFY_RESPONSE_ENABLED,EnableJerryMice.WEB_GLOBAL_EXCEPTION_ENABLED}, havingValue = "true", matchIfMissing = true)
+    public class ExceptionResolversWebMvcConfigurer implements WebMvcConfigurer {
+        @Autowired(required = false)
+        private ResultWrapHandler resultWrapHandler;
+        @Override
+        public void extendHandlerExceptionResolvers(List<HandlerExceptionResolver> resolvers) {
+            if(resultWrapHandler!=null){
+                HandlerExceptionResolver handlerExceptionResolver = resolvers.get(0);
+                if(handlerExceptionResolver instanceof ExceptionHandlerExceptionResolver){
+                    ExceptionHandlerExceptionResolver resolver=(ExceptionHandlerExceptionResolver)  handlerExceptionResolver;
+                    List<HandlerMethodReturnValueHandler> handlers = resolver.getReturnValueHandlers().getHandlers();
+                    ArrayList<HandlerMethodReturnValueHandler> newHandlers = new ArrayList<>();
+                    for(HandlerMethodReturnValueHandler handler :handlers){
+                        if(handler instanceof RequestResponseBodyMethodProcessor){
+                            newHandlers.add(new DelegateRequestResponseBodyMethodProcessor(handler,resultWrapHandler));
+                        }
+                        newHandlers.add(handler);
+                    }
+                    resolver.setReturnValueHandlers(newHandlers);
+                }
             }
         }
     }

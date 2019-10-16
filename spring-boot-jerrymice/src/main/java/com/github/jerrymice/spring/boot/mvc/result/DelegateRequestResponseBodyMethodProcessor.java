@@ -6,10 +6,12 @@ import org.springframework.core.MethodParameter;
 import org.springframework.core.ResolvableType;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.server.ServletServerHttpResponse;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Type;
 
 
@@ -54,15 +56,13 @@ public class DelegateRequestResponseBodyMethodProcessor implements HandlerMethod
                     }
                 }
             };
+            /**
+             * 当启用统一返回值包装时,所有HttpStatus都强制返回值为200
+             */
+            HttpServletResponse nativeResponse = webRequest.getNativeResponse(HttpServletResponse.class);
+            nativeResponse.setStatus(HttpStatus.OK.value());
             this.delegate.handleReturnValue(returnWrapValue, methodParameter, mavContainer, webRequest);
         } else {
-            //当不开启返回值处理时,如果返回值是Status类型,且如果是请求错误,那么定义HttpStatus为403
-            if (mavContainer.getStatus().value() == HttpStatus.OK.value()
-                    && returnValue != null
-                    && returnValue instanceof Status
-                    && !GlobalErrorCode.REQUEST_SUCCESS.getCode().equalsIgnoreCase(((Status) returnValue).getCode())) {
-                mavContainer.setStatus(HttpStatus.FORBIDDEN);
-            }
             this.delegate.handleReturnValue(returnValue, returnType, mavContainer, webRequest);
         }
     }

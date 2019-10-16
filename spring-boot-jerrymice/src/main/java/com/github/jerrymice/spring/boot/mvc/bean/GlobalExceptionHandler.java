@@ -7,6 +7,7 @@ import com.github.jerrymice.common.entity.entity.ResultInfo;
 import com.github.jerrymice.common.entity.entity.Status;
 import com.github.jerrymice.common.entity.ex.RemoteResultException;
 import com.github.jerrymice.common.entity.ex.ResultException;
+import com.github.jerrymice.common.entity.ex.ResultIllegalArgumentException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
@@ -42,7 +43,7 @@ public class GlobalExceptionHandler {
     private static String[] RESULT_EXCEPTION_PRINT_EXCLUDE_PACKAGE = new String[]{"java.", "javax.", "sun.", "org.apache", "org.springframework"};
 
     /**
-     * 参数校验
+     * 404-参数校验
      *
      * @param e spring 异常信息
      * @return 异常响应结果
@@ -59,17 +60,42 @@ public class GlobalExceptionHandler {
                 map.put(fieldError.getField(), fieldError.getDefaultMessage());
             }
             String message = e.getAllErrors().stream().map(i -> i.getObjectName() + ":" + i.getDefaultMessage()).collect(Collectors.joining(";"));
-            log.error(MessageFormat.format("Rest Controller参数验证 异常,路径:{0},错误信息:{1}", e.getNestedPath(), message));
+            log.error(MessageFormat.format("Rest Controller参数 异常,路径:{0},错误信息:{1}", e.getNestedPath(), message));
             return Status.wrapped(GlobalErrorCode.INVALID_REQUEST_ARGUMENTS.getCode(), map.values().stream().collect(Collectors.joining(";")));
         } else {
             return Status.wrapped(GlobalErrorCode.INVALID_REQUEST_ARGUMENTS.getCode(), e.getFieldError().getDefaultMessage());
         }
     }
 
-    @ExceptionHandler(NullPointerException.class)
-    public Status dealNullPointerException(NullPointerException e) {
-        log.error("空指针异常:", e);
-        return Status.wrapped(GlobalErrorCode.UNKNOWN_SYSTEM_ERROR.getCode(), "空指针错误：" + e.getLocalizedMessage());
+    /**
+     * 400
+     *
+     * @param e 异常
+     * @return 异常响应结果
+     */
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(ResultIllegalArgumentException.class)
+    public Status resultIllegalArgumentException(ResultIllegalArgumentException e) {
+        if (log.isDebugEnabled()) {
+            log.error("Rest Controller参数 异常", e);
+        } else {
+            log.warn("Rest Controller参数 异常,错误信息:{},异常方法:\n{}", e.getLocalizedMessage(), getResultExceptionMessage(e));
+        }
+        return Status.wrapped(e.getCode(), e.getLocalizedMessage());
+    }
+    /**
+     * 404
+     *
+     * @param e 异常
+     * @return 异常响应结果
+     */
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(NoHandlerFoundException.class)
+    public Status noHandlerFoundException(NoHandlerFoundException e) {
+        String url = e.getRequestURL();
+        url = url.indexOf("?") >= 1 ? url.substring(0, url.indexOf("?")) : url;
+        log.error("Rest API调用 异常,找不到指定的API:{}",url);
+        return Status.wrapped(GlobalErrorCode.INVALID_SERVICE_API.getCode(), url + GlobalErrorCode.INVALID_SERVICE_API.getMessage());
     }
 
     /**
@@ -99,40 +125,65 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * 通用异常
+     * 500
+     *
+     * @param e spring 异常信息
+     * @return 异常响应结果
+     */
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(NullPointerException.class)
+    public Status dealNullPointerException(NullPointerException e) {
+        log.error("空指针异常:", e);
+        return Status.wrapped(GlobalErrorCode.UNKNOWN_SYSTEM_ERROR.getCode(), "空指针错误：" + e.getLocalizedMessage());
+    }
+    /**
+     * 500
+     *
+     * @param e spring 异常信息
+     * @return 异常响应结果
+     */
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(RemoteResultException.class)
+    public Status remoteResultException(RemoteResultException e) {
+        if (log.isDebugEnabled()) {
+            log.error("Rest API调用 异常", e.toString(), e);
+        } else {
+            log.warn("Rest API调用 异常,错误信息:{},异常方法:{}", e.toString(), getResultExceptionMessage(e));
+        }
+        return Status.wrapped(e.getCode(), e.toString());
+    }
+    /**
+     * 500
+     *
+     * @param e spring 异常信息
+     * @return 异常响应结果
+     */
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(ResultException.class)
+    public Status resultException(ResultException e) {
+        if (log.isDebugEnabled()) {
+            log.error("Rest Controller业务 异常", e);
+        } else {
+            log.warn("Rest Controller业务 异常,错误信息:{},异常方法:\n{}", e.getLocalizedMessage(), getResultExceptionMessage(e));
+        }
+        return Status.wrapped(e.getCode(), e.getLocalizedMessage());
+    }
+
+    /**
+     * 500-通用异常
      *
      * @param request HttpServletRequest
      * @param e       spring 异常信息
      * @return 异常响应结果
      */
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
     public Status defaultExceptionHandler(HttpServletRequest request, Exception e) {
-        if (e instanceof RemoteResultException) {
-            if (log.isDebugEnabled()) {
-                log.error("Rest API调用 异常", e.toString(), e);
-            } else {
-                log.warn("Rest API调用 异常,错误信息:{},异常方法:{}", e.toString(), getResultExceptionMessage((RemoteResultException) e));
-            }
-            return Status.wrapped(((ResultException) e).getCode(), e.toString());
-        } else if (e instanceof ResultException) {
-            if (log.isDebugEnabled()) {
-                log.error("Rest Controller业务 异常", e);
-            } else {
-                log.warn("Rest Controller业务 异常,错误信息:{},异常方法:\n{}", e.getLocalizedMessage(), getResultExceptionMessage((ResultException) e));
-            }
-            return Status.wrapped(((ResultException) e).getCode(), e.getLocalizedMessage());
-        } else if (e instanceof NoHandlerFoundException) {
-            //处理404异常.
-            String url = ((NoHandlerFoundException) e).getRequestURL();
-            url = url.indexOf("?") >= 1 ? url.substring(0, url.indexOf("?")) : url;
-            return Status.wrapped(GlobalErrorCode.INVALID_SERVICE_API.getCode(), url + GlobalErrorCode.INVALID_SERVICE_API.getMessage());
-        } else {
             log.error("Rest Controller 异常", e);
             return Status.wrapped(GlobalErrorCode.UNKNOWN_SYSTEM_ERROR.getCode(), e.getLocalizedMessage());
-        }
     }
 
-    private String getResultExceptionMessage(ResultException ex) {
+    private String getResultExceptionMessage(Exception ex) {
         StringBuilder result = new StringBuilder();
         StackTraceElement[] stackTraceElement = ex.getStackTrace();
         for (int i = 0; i < stackTraceElement.length; i++) {

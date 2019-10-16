@@ -43,11 +43,11 @@ public interface ResultWrapHandler {
         Class<?> returnTypeClass = returnType.getMethod().getReturnType();
         ReturnWrapValue result;
         //处理void方法
-        if (returnTypeClass.equals(void.class)) {
+        if (returnTypeClass.equals(void.class) || returnTypeClass.equals(Void.class)) {
             result = new ReturnWrapValue(GlobalErrorCode.REQUEST_SUCCESS.getStatus(), null);
-        } else if (returnTypeClass.isAssignableFrom(Result.class)) {
+        } else if (Result.class.isAssignableFrom(returnTypeClass)) {
             result = new ReturnWrapValue((Result) returnValue);
-        } else if (returnTypeClass.isAssignableFrom(Status.class)) {
+        } else if (Status.class.isAssignableFrom(returnTypeClass)) {
             result = new ReturnWrapValue((Status) returnValue, null);
         } else {
             result = new ReturnWrapValue(GlobalErrorCode.REQUEST_SUCCESS.getStatus(), returnValue);
