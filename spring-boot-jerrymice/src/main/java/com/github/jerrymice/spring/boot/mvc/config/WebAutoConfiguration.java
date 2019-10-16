@@ -18,12 +18,17 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.core.env.Environment;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.http.server.ServletServerHttpResponse;
 import org.springframework.session.ExpiringSession;
 import org.springframework.session.MapSessionRepository;
 import org.springframework.session.SessionRepository;
@@ -37,6 +42,8 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 import org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor;
 import org.springframework.web.servlet.mvc.method.annotation.ServletWebArgumentResolverAdapter;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -54,7 +61,30 @@ public class WebAutoConfiguration {
     @ConditionalOnProperty(name = EnableJerryMice.WEB_LOGIN_INTERCEPTOR_ENABLE, havingValue = "true", matchIfMissing = true)
     @ConditionalOnMissingBean(InterceptUserHandler.class)
     public class DefaultInterceptUserHandler implements InterceptUserHandler {
-
+        @Autowired
+        private SpringWebMvcProperties springWebMvcProperties;
+        /**
+         * 登录请求拦截后的响应内容返回
+         *
+         * @param request 请求
+         * @param response 响应
+         * @param converter json转换器
+         * @throws IOException
+         */
+        @Override
+        public void forbidden(HttpServletRequest request, ServletServerHttpResponse response, HttpMessageConverter converter) throws IOException {
+            /**
+             * 如果没有x-http-response-wrap头,
+             */
+            if (HttpStatus.OK.value() == response.getServletResponse().getStatus()
+                    && springWebMvcProperties.isUnifyResponse()
+                    && "true".equalsIgnoreCase(request.getHeader("x-http-response-wrap"))) {
+                converter.write(jsonBody(request), MediaType.APPLICATION_JSON, response);
+            } else {
+                response.setStatusCode(HttpStatus.FORBIDDEN);
+                converter.write(jsonBody(request), MediaType.APPLICATION_JSON, response);
+            }
+        }
     }
 
     /**
@@ -85,13 +115,11 @@ public class WebAutoConfiguration {
         @Autowired
         private SpringWebMvcProperties.LoginInterceptor loginConfig;
         @Autowired
-        private HttpMessageConverter<Object> converter;
-        @Autowired
-        private InterceptUserHandler interceptUserHandler;
+        private ApplicationContext applicationContext;
 
         @Override
         public void addInterceptors(InterceptorRegistry registry) {
-            InterceptorRegistration registration = registry.addInterceptor(new UserLoginInterceptor(loginConfig.getUserSessionKey(), converter, interceptUserHandler))
+            InterceptorRegistration registration = registry.addInterceptor(new UserLoginInterceptor(applicationContext))
                     .order(loginConfig.getOrder());
             String[] pathPatterns = loginConfig.getPathPatterns();
             String[] excludePathPatterns = loginConfig.getExcludePathPatterns();

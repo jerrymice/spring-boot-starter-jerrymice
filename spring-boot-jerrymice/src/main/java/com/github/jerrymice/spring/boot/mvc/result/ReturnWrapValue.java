@@ -1,5 +1,6 @@
 package com.github.jerrymice.spring.boot.mvc.result;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.jerrymice.common.entity.code.GlobalErrorCode;
 import com.github.jerrymice.common.entity.entity.Result;
 import com.github.jerrymice.common.entity.entity.Status;
@@ -12,9 +13,9 @@ import java.util.HashMap;
  * 功能说明:一个spring mvc返回值包装类
  */
 public class ReturnWrapValue extends HashMap<String,Object> {
-    private final  String codeKey ="code";
-    private final  String messageKey ="message";
-    private final  String bodyKey ="body";
+    private   String codeKey ="code";
+    private   String messageKey ="message";
+    private   String bodyKey ="body";
     public ReturnWrapValue() {
     }
     public ReturnWrapValue(Status status, Object body){
@@ -30,5 +31,29 @@ public class ReturnWrapValue extends HashMap<String,Object> {
         if(body!=null || GlobalErrorCode.REQUEST_SUCCESS_ONLY_CODE.getCode().equals(code)){
             this.put(bodyKey,body);
         }
+    }
+    @JsonIgnore
+    public String getCodeKey() {
+        return codeKey;
+    }
+    @JsonIgnore
+    public String getMessageKey() {
+        return messageKey;
+    }
+    @JsonIgnore
+    public String getBodyKey() {
+        return bodyKey;
+    }
+    @JsonIgnore
+    public void setCodeKey(String codeKey) {
+        this.codeKey = codeKey;
+    }
+    @JsonIgnore
+    public void setMessageKey(String messageKey) {
+        this.messageKey = messageKey;
+    }
+    @JsonIgnore
+    public void setBodyKey(String bodyKey) {
+        this.bodyKey = bodyKey;
     }
 }

@@ -1,7 +1,11 @@
 package com.github.jerrymice.spring.boot.mvc.result;
+
+import com.github.jerrymice.common.entity.code.GlobalErrorCode;
+import com.github.jerrymice.common.entity.entity.Status;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.ResolvableType;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.method.support.ModelAndViewContainer;
@@ -16,11 +20,11 @@ import java.lang.reflect.Type;
  */
 public class DelegateRequestResponseBodyMethodProcessor implements HandlerMethodReturnValueHandler {
     /**
-     *
      * @see DelegateRequestResponseBodyMethodProcessor
      */
     private HandlerMethodReturnValueHandler delegate;
     private ResultWrapHandler wrapDelegate;
+
     public DelegateRequestResponseBodyMethodProcessor(HandlerMethodReturnValueHandler delegate, ResultWrapHandler wrapDelegate) {
         this.delegate = delegate;
         this.wrapDelegate = wrapDelegate;
@@ -34,25 +38,31 @@ public class DelegateRequestResponseBodyMethodProcessor implements HandlerMethod
     @Override
     public void handleReturnValue(Object returnValue, MethodParameter returnType, ModelAndViewContainer mavContainer, NativeWebRequest webRequest) throws Exception {
         //包装类
-        if (wrapDelegate.supportsWrap(returnValue,returnType,mavContainer,webRequest)) {
-           final ReturnWrapValue returnWrapValue = wrapDelegate.wrapReturnValue(returnValue, returnType, mavContainer, webRequest);
-            MethodParameter methodParameter = new MethodParameter(returnType){
+        if (wrapDelegate.supportsWrap(returnValue, returnType, mavContainer, webRequest)) {
+            final ReturnWrapValue returnWrapValue = wrapDelegate.wrapReturnValue(returnValue, returnType, mavContainer, webRequest);
+            MethodParameter methodParameter = new MethodParameter(returnType) {
                 @Override
                 public Type getGenericParameterType() {
                     if (HttpEntity.class.isAssignableFrom(this.getParameterType())) {
                         return super.getGenericParameterType();
-                    }
-                    else {
-                        if(returnWrapValue!=null){
+                    } else {
+                        if (returnWrapValue != null) {
                             return ResolvableType.forInstance(returnWrapValue).getType();
-                        }else{
+                        } else {
                             return ResolvableType.forType(ReturnWrapValue.class).getType();
                         }
                     }
                 }
             };
-            this.delegate.handleReturnValue(returnWrapValue,methodParameter,mavContainer,webRequest);
-        }else{
+            this.delegate.handleReturnValue(returnWrapValue, methodParameter, mavContainer, webRequest);
+        } else {
+            //当不开启返回值处理时,如果返回值是Status类型,且如果是请求错误,那么定义HttpStatus为403
+            if (mavContainer.getStatus().value() == HttpStatus.OK.value()
+                    && returnValue != null
+                    && returnValue instanceof Status
+                    && !GlobalErrorCode.REQUEST_SUCCESS.getCode().equalsIgnoreCase(((Status) returnValue).getCode())) {
+                mavContainer.setStatus(HttpStatus.FORBIDDEN);
+            }
             this.delegate.handleReturnValue(returnValue, returnType, mavContainer, webRequest);
         }
     }

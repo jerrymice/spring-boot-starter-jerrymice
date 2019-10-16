@@ -4,8 +4,12 @@ import com.github.jerrymice.common.entity.code.GlobalErrorCode;
 import com.github.jerrymice.common.entity.entity.Result;
 import com.github.jerrymice.common.entity.entity.Status;
 import org.springframework.core.MethodParameter;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.ModelAndViewContainer;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author tumingjian
@@ -26,7 +30,6 @@ public interface ResultWrapHandler {
          String wrap = webRequest.getHeader("x-http-response-wrap");
          return wrap != null && "true".equalsIgnoreCase(wrap);
      }
-
     /**
      * 包装结果
      * @param returnValue 原Controller方法返回值
@@ -50,5 +53,6 @@ public interface ResultWrapHandler {
             result = new ReturnWrapValue(GlobalErrorCode.REQUEST_SUCCESS.getStatus(), returnValue);
         }
         return result;
+
     }
 }
