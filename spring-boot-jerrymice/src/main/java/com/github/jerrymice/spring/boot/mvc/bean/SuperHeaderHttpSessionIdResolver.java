@@ -53,7 +53,10 @@ public class SuperHeaderHttpSessionIdResolver implements HttpSessionIdResolver {
             sessionId.addAll(defaultHttpSessionIdResolver.resolveSessionIds(request));
         }
         if (sessionId.size()==0 && supportHttpHeader) {
-            sessionId.add(request.getHeader(this.sessionAliasParamName));
+            String headSessionId;
+            if((headSessionId=request.getHeader(this.sessionAliasParamName))!=null){
+                sessionId.add(headSessionId);
+            }
         }
         if (sessionId.size()==0 && supportQueryString) {
             //从get参数中获取sessionId
