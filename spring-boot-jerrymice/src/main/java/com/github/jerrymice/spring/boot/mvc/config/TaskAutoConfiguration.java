@@ -19,6 +19,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  */
 @Slf4j
 @ConditionalOnProperty(name = EnableJerryMice.WEB_TASK, havingValue = "true")
+@Configuration
 public class TaskAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(TaskProvider.class)

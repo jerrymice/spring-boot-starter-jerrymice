@@ -57,6 +57,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * 说明:
  */
 @Slf4j
+@Configuration
 public class WebAutoConfiguration {
 
     @Configuration

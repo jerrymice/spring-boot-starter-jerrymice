@@ -20,6 +20,7 @@ import java.util.Set;
  * 说明:
  */
 @ConditionalOnProperty(name = EnableJerryMice.WEB_SECURITY, havingValue = "true")
+@Configuration
 public class SecurityAutoConfiguration {
 
 

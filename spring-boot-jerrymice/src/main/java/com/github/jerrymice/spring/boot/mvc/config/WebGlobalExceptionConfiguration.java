@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -25,6 +26,7 @@ import java.util.List;
  */
 @ConditionalOnWebApplication
 @ConditionalOnProperty(name= EnableJerryMice.WEB_GLOBAL_EXCEPTION_ENABLED,havingValue = "true",matchIfMissing = true)
+@Configuration
 public class WebGlobalExceptionConfiguration {
 
 	@Bean

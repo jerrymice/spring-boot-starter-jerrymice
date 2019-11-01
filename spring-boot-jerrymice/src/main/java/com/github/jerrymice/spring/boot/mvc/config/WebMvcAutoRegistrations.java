@@ -15,6 +15,7 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
  * @see OrderRequestMappingHandlerMapping
  * @see WebMvcRegistrations
  */
+@Configuration
 public class WebMvcAutoRegistrations {
     /**
      * @author tumingjian
