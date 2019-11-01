@@ -328,7 +328,7 @@ public class WebAutoConfiguration {
             return new SuperHeaderHttpSessionIdResolver(config.getSessionAliasParamName(), config.isSupportHttpHeader(), config.isSupportQueryString(), config.isSupportCookie());
         }
         /**
-         * 支持在 ConstraintValidator接口中直接用Autowired流解引用spring中的bean,用于自定义的注解验证器.
+         * 支持在 ConstraintValidator接口中直接用Autowired注解引用spring中的bean,用于自定义的注解验证器.
          *
          * @return LocalValidatorFactoryBean
          */

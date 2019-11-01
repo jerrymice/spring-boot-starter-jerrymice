@@ -10,6 +10,7 @@ import org.springframework.http.server.ServletServerHttpResponse;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.method.support.ModelAndViewContainer;
+import org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor;
 
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Type;
@@ -18,11 +19,12 @@ import java.lang.reflect.Type;
 /**
  * @author tumingjian
  * 创建时间: 2019-10-08 13:27
- * 功能说明:一个统一全局JSON响应的类处理类,这个类替换了spring本身的DelegateRequestResponseBodyMethodProcessor;
+ * 功能说明:一个统一全局JSON响应的类处理类,这个类替换了spring本身的RequestResponseBodyMethodProcessor;
  */
 public class DelegateRequestResponseBodyMethodProcessor implements HandlerMethodReturnValueHandler {
     /**
-     * @see DelegateRequestResponseBodyMethodProcessor
+     * 这是RequestResponseBodyMethodProcessor原处理类
+     * @see RequestResponseBodyMethodProcessor
      */
     private HandlerMethodReturnValueHandler delegate;
     private ResultWrapHandler wrapDelegate;
