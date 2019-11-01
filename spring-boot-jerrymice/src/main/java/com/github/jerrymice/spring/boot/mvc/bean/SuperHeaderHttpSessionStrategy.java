@@ -13,10 +13,12 @@ import java.util.regex.Pattern;
 
 /**
  * @author tumingjian
- * 说明:更强的HttpSessionStrategy策略.
+ * 说明:更强的HttpSessionStrategy策略.这个HttpSessionStrategy接口在2.0以上已经不能使用了
+ * @see SuperHeaderHttpSessionIdResolver
  * @see EnableJerryMice
  * @see WebAutoConfiguration.BeanConfiguration
  */
+@Deprecated
 public class SuperHeaderHttpSessionStrategy implements HttpSessionStrategy {
     /**
      * sessionId 在各个环境下的key名称

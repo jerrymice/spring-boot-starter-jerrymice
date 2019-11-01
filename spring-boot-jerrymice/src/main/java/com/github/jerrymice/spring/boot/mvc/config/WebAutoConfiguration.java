@@ -14,10 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
+import org.springframework.boot.autoconfigure.condition.*;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,6 +30,7 @@ import org.springframework.session.ExpiringSession;
 import org.springframework.session.MapSessionRepository;
 import org.springframework.session.SessionRepository;
 import org.springframework.session.config.annotation.web.http.SpringHttpSessionConfiguration;
+import org.springframework.session.web.http.HttpSessionIdResolver;
 import org.springframework.session.web.http.HttpSessionStrategy;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -300,18 +298,35 @@ public class WebAutoConfiguration {
         }
 
         /**
-         * 启用扩展的SessionStrategy
+         *
+         * 启用扩展的SessionStrategy,适合于spring-session 2.0以下的版本
          *
          * @return HttpSessionStrategy
+         */
+        @Deprecated
+        @Bean
+        @ConditionalOnWebApplication
+        @ConditionalOnBean(SpringHttpSessionConfiguration.class)
+        @ConditionalOnClass(HttpSessionStrategy.class)
+        @ConditionalOnMissingClass("org.springframework.session.web.http.HttpSessionIdResolver")
+        @ConditionalOnProperty(name = EnableJerryMice.WEB_SESSION_STRATEGY_ENABLE, havingValue = "true", matchIfMissing = true)
+        public SuperHeaderHttpSessionStrategy httpSessionStrategy() {
+            return new SuperHeaderHttpSessionStrategy(config.getSessionAliasParamName(), config.isSupportHttpHeader(), config.isSupportQueryString(), config.isSupportCookie());
+        }
+
+        /**
+         * 启用扩展的HttpSessionIdResolver,适合于spring-session 2.0以上的版本
+         *
+         * @return HttpSessionIdResolver
          */
         @Bean
         @ConditionalOnWebApplication
         @ConditionalOnBean(SpringHttpSessionConfiguration.class)
+        @ConditionalOnClass(HttpSessionIdResolver.class)
         @ConditionalOnProperty(name = EnableJerryMice.WEB_SESSION_STRATEGY_ENABLE, havingValue = "true", matchIfMissing = true)
-        public HttpSessionStrategy httpSessionStrategy() {
-            return new SuperHeaderHttpSessionStrategy(config.getSessionAliasParamName(), config.isSupportHttpHeader(), config.isSupportQueryString(), config.isSupportCookie());
+        public SuperHeaderHttpSessionIdResolver httpSessionIdResolver() {
+            return new SuperHeaderHttpSessionIdResolver(config.getSessionAliasParamName(), config.isSupportHttpHeader(), config.isSupportQueryString(), config.isSupportCookie());
         }
-
         /**
          * 支持在 ConstraintValidator接口中直接用Autowired流解引用spring中的bean,用于自定义的注解验证器.
          *
