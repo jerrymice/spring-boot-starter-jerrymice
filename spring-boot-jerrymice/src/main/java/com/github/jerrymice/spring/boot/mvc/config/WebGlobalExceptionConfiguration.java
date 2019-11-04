@@ -2,22 +2,11 @@ package com.github.jerrymice.spring.boot.mvc.config;
 
 import com.github.jerrymice.spring.boot.EnableJerryMice;
 import com.github.jerrymice.spring.boot.mvc.bean.GlobalExceptionHandler;
-import com.github.jerrymice.spring.boot.mvc.result.DelegateRequestResponseBodyMethodProcessor;
-import com.github.jerrymice.spring.boot.mvc.result.ResultWrapHandler;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
-import org.springframework.web.servlet.HandlerExceptionResolver;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
-import org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author kexl

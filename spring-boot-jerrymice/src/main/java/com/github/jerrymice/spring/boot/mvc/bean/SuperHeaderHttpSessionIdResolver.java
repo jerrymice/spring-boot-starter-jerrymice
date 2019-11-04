@@ -1,7 +1,6 @@
 package com.github.jerrymice.spring.boot.mvc.bean;
 
 import org.springframework.session.web.http.CookieHttpSessionIdResolver;
-import org.springframework.session.web.http.CookieHttpSessionStrategy;
 import org.springframework.session.web.http.HttpSessionIdResolver;
 
 import javax.servlet.http.HttpServletRequest;
